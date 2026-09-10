@@ -1,0 +1,37 @@
+<Project>
+
+    <!-- Safety net: any exe project in this repo gets System.Memory copied next to the exe.
+
+         Why: the Tekla packages are referenced with ExcludeAssets="runtime", which also strips the
+         transitive System.Memory (and System.Buffers, System.Numerics.Vectors,
+         System.Runtime.CompilerServices.Unsafe) from a standalone exe's output. The exe then dies
+         on first Tekla connect with
+         "Could not load file or assembly 'System.Memory, Version=4.0.1.2'".
+         TeklaDump.Cli carries an explicit System.Memory reference, but that line is easy to drop
+         when a csproj is edited or a new exe project is hand-added — this re-injects it so the
+         build stays correct regardless.
+
+         Why here and not Directory.Build.props: props are imported BEFORE the project body, where
+         OutputType is not yet set; targets are imported AFTER, so the condition below works.
+
+         The duplicate guard keeps this from doubling the reference (NU1504) in projects that
+         already declare it. TeklaDump.dll and the macro bundle are untouched — they run INSIDE
+         Tekla's process, which provides System.Memory itself, and a stray copy next to a plugin is
+         a binding hazard rather than a fix. -->
+    <ItemGroup Condition="('$(OutputType)' == 'Exe' or '$(OutputType)' == 'WinExe') and '$(SkipSystemMemoryInjection)' != 'true' and '@(PackageReference->AnyHaveMetadataValue(`Identity`, `System.Memory`))' != 'true'">
+        <PackageReference Include="System.Memory" Version="4.6.3" />
+    </ItemGroup>
+
+    <!-- 4.6.3, not the 4.5.5 that older write-ups on standalone Tekla exes name: the Tekla
+         packages themselves depend on System.Memory >= 4.6.3 on every supported version, 2021
+         floor included, so 4.5.5 is a package downgrade that NuGet fails the build over. The
+         assembly version moves from 4.0.1.2 to 4.0.2.0 with it, which is why TeklaDump.Cli turns
+         on AutoGenerateBindingRedirects — see the comment there. -->
+
+    <!-- SkipSystemMemoryInjection is for the two exes that reference the Tekla packages WITH their
+         runtime assets (the schema generator and the test project). Those get System.Memory
+         through the normal transitive graph at whatever version Tekla asks for, and pinning 4.5.5
+         underneath that is a package DOWNGRADE, which NuGet fails the build over. Neither of them
+         is a distributed Tekla-connecting exe, so the 4.5.5 pairing does not apply to them. -->
+
+</Project>

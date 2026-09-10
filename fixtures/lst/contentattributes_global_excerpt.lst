@@ -1,0 +1,789 @@
+// Excerpt from Tekla 2026.0 contentattributes_global.lst, trimmed for use as a test fixture.
+// Real lines, verbatim: the definition lines for the attributes bound below, then a slice of the
+// PART, BOLT and ASSEMBLY bindings — the ones a dump actually asks for (PROFILE, WEIGHT,
+// PART_POS, ...) plus enough neighbours to exercise grouping and tier classification. The full
+// file is 1.2 MB and 24k lines, which is more than a fixture needs to prove the parser reads the
+// format.
+
+ADDED_TO_POUR_UNIT              INTEGER     LEFT     TRUE       1
+ADDED_TO_REBAR_ASSEMBLY         INTEGER     LEFT     TRUE       1
+ACN                             INTEGER     LEFT     TRUE       5
+ACTIVE_DESIGN_CODE              INTEGER     RIGHT    TRUE       3
+ALIAS_NAME1                     CHARACTER   LEFT     TRUE      20
+ALIAS_NAME2                     CHARACTER   LEFT     TRUE      20
+ALIAS_NAME3                     CHARACTER   LEFT     TRUE      20
+ANGLE                           FLOAT       RIGHT    TRUE       7       2         Angle      Degrees
+AREA                            FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_GROSS                      FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_NET                        FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PER_TONS                   FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PLAN                       FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_GXY_NET         FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_GXZ_NET         FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_GYZ_NET         FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_GXY_GROSS       FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_GXZ_GROSS       FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_GYZ_GROSS       FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_XY_NET          FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_XZ_NET          FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_YZ_NET          FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_XY_GROSS        FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_XZ_GROSS        FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PROJECTION_YZ_GROSS        FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PGZ                        FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_NGZ                        FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PGX                        FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_NGX                        FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PGY                        FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_NGY                        FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PZ                         FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_NZ                         FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PX                         FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_NX                         FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_PY                         FLOAT       RIGHT    TRUE       8       2         Area       m2
+AREA_NY                         FLOAT       RIGHT    TRUE       8       2         Area       m2
+ASSEMBLY_BOTTOM_LEVEL           CHARACTER   LEFT     TRUE      10
+ASSEMBLY_BOTTOM_LEVEL_BASEPOINT CHARACTER   LEFT     TRUE      10
+ASSEMBLY_BOTTOM_LEVEL_GLOBAL    CHARACTER   LEFT     TRUE      10
+ASSEMBLY_BOTTOM_LEVEL_PROJECT   CHARACTER   LEFT     TRUE      10
+ASSEMBLY_BOTTOM_LEVEL_UNFORMATTED FLOAT       LEFT     TRUE      10       0         Length     mm
+ASSEMBLY_BOTTOM_LEVEL_UNFORMATTED_BASEPOINT FLOAT       LEFT     TRUE      10       0         Length     mm
+ASSEMBLY_BOTTOM_LEVEL_UNFORMATTED_PROJECT FLOAT       LEFT     TRUE      10       0         Length     mm
+ASSEMBLY_BOTTOM_LEVEL_GLOBAL_UNFORMATTED FLOAT       LEFT     TRUE      10       0         Length     mm
+ASSEMBLY_DEFAULT_PREFIX			CHARACTER   LEFT     TRUE       2
+ASSEMBLY_NAME                   CHARACTER   LEFT     TRUE      20
+ASSEMBLY_PLWEIGHT               FLOAT       RIGHT    TRUE      10       0         Weight     kg
+ASSEMBLY_POS                    CHARACTER   LEFT     TRUE      10
+ASSEMBLY_POSITION_CODE          CHARACTER   LEFT     TRUE      10
+ASSEMBLY_PREFIX                 CHARACTER   LEFT     TRUE      10
+ASSEMBLY_SERIAL_NUMBER          INTEGER     LEFT     TRUE      10
+ASSEMBLY_START_NUMBER           INTEGER     LEFT     TRUE      10
+ASSEMBLY_TOP_LEVEL              CHARACTER   LEFT     TRUE      10
+ASSEMBLY_TOP_LEVEL_BASEPOINT    CHARACTER   LEFT     TRUE      10
+ASSEMBLY_TOP_LEVEL_GLOBAL       CHARACTER   LEFT     TRUE      10
+ASSEMBLY_TOP_LEVEL_PROJECT      CHARACTER   LEFT     TRUE      10
+ASSEMBLY_TOP_LEVEL_UNFORMATTED  FLOAT       LEFT     TRUE      10       0         Length     mm
+ASSEMBLY_TOP_LEVEL_UNFORMATTED_BASEPOINT FLOAT       LEFT     TRUE      10       0         Length     mm
+ASSEMBLY_TOP_LEVEL_UNFORMATTED_PROJECT FLOAT       LEFT     TRUE      10       0         Length     mm
+ASSEMBLY_TOP_LEVEL_GLOBAL_UNFORMATTED FLOAT       LEFT     TRUE      10       0         Length     mm
+BIND_TO_LEVELS                  INTEGER     LEFT     TRUE       1
+BOLT_COUNTERSUNK                INTEGER     LEFT     TRUE       1       0
+BOLT_EDGE_DISTANCE              FLOAT       LEFT     TRUE       5       0         Length     mm
+BOLT_EDGE_DISTANCE_MIN          FLOAT       LEFT     TRUE       5       0         Length     mm
+BOLT_MATERIAL_LENGTH            FLOAT       LEFT     TRUE       4       0         Length     mm
+BOLT_NPARTS                     INTEGER     LEFT     TRUE       3
+BOLT_STANDARD                   CHARACTER   LEFT     TRUE      10
+BOLT_THREAD_LENGTH              FLOAT       LEFT     TRUE       5       0         Length     mm
+BOTTOM_LEVEL                    CHARACTER   LEFT     TRUE      10
+BOTTOM_LEVEL_BASEPOINT          CHARACTER   LEFT     TRUE      10
+BOTTOM_LEVEL_GLOBAL             CHARACTER   LEFT     TRUE      10
+BOTTOM_LEVEL_PROJECT            CHARACTER   LEFT     TRUE      10
+BOTTOM_LEVEL_UNFORMATTED        FLOAT       LEFT     TRUE      10       0         Length     mm
+BOTTOM_LEVEL_UNFORMATTED_BASEPOINT FLOAT       LEFT     TRUE      10       0         Length     mm
+BOTTOM_LEVEL_UNFORMATTED_PROJECT FLOAT       LEFT     TRUE      10       0         Length     mm
+BOTTOM_LEVEL_GLOBAL_UNFORMATTED FLOAT       LEFT     TRUE      10       0         Length     mm
+BOUNDING_BOX_MIN_X              FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MIN_Y              FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MIN_Z              FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MIN_X_BASEPOINT    FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MIN_Y_BASEPOINT    FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MIN_Z_BASEPOINT    FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MIN_X_PROJECT      FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MIN_Y_PROJECT      FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MIN_Z_PROJECT      FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MAX_X              FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MAX_Y              FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MAX_Z              FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MAX_X_BASEPOINT    FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MAX_Y_BASEPOINT    FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MAX_Z_BASEPOINT    FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MAX_X_PROJECT      FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MAX_Y_PROJECT      FLOAT       RIGHT    TRUE       8       2         Length     mm
+BOUNDING_BOX_MAX_Z_PROJECT      FLOAT       RIGHT    TRUE       8       2         Length     mm
+CANTILEVER                      FLOAT       RIGHT    TRUE       7       0         Length     mm
+CLASS_ATTR                      CHARACTER   LEFT     TRUE       6
+COG_X                           FLOAT       RIGHT    TRUE       8       0         Length     mm
+COG_Y                           FLOAT       RIGHT    TRUE       8       0         Length     mm
+COG_Z                           FLOAT       RIGHT    TRUE       8       0         Length     mm
+COG_X_BASEPOINT                 FLOAT       RIGHT    TRUE       8       0         Length     mm
+COG_Y_BASEPOINT                 FLOAT       RIGHT    TRUE       8       0         Length     mm
+COG_Z_BASEPOINT                 FLOAT       RIGHT    TRUE       8       0         Length     mm
+COG_X_PROJECT                   FLOAT       RIGHT    TRUE       8       0         Length     mm
+COG_Y_PROJECT                   FLOAT       RIGHT    TRUE       8       0         Length     mm
+COG_Z_PROJECT                   FLOAT       RIGHT    TRUE       8       0         Length     mm
+COMMENT                         CHARACTER   LEFT     TRUE      20
+CONNECTED_ASSEMBLIES            CHARACTER   LEFT     TRUE      20
+CONNECTED_PARTS                 CHARACTER   LEFT     TRUE      20
+CONTENTTYPE                     CHARACTER   LEFT     TRUE      20
+COVER_AREA                      FLOAT       RIGHT    TRUE       7       2         Area       mm2
+CROSS_SECTION_AREA              FLOAT       RIGHT    TRUE       7       2         Area       mm2
+CROSS_SECTION_AREA_START        FLOAT       RIGHT    TRUE       7       2         Area       mm2
+CROSS_SECTION_AREA_END          FLOAT       RIGHT    TRUE       7       2         Area       mm2
+CURRENT_PHASE                   INTEGER     RIGHT    TRUE       5
+CURVED_SEGMENTS                 INTEGER	    RIGHT    TRUE       4		0
+DATE                            INTEGER     LEFT     TRUE      12       0         Date       dd.mm.yyyy
+DEPTH                           FLOAT       LEFT     TRUE       4       0         Length     mm
+DIAMETER                        FLOAT       RIGHT    TRUE       5       0         Length     mm
+DIAMETER_1                      FLOAT       RIGHT    TRUE       7       2         Length     mm
+DIAMETER_2                      FLOAT       RIGHT    TRUE       7       2         Length     mm
+DIAMETER_X                      FLOAT       RIGHT    TRUE       5       0         Length     mm
+DIAMETER_Y                      FLOAT       RIGHT    TRUE       5       0         Length     mm
+DIMENSION_A                     FLOAT       RIGHT    TRUE       8       0         Length     mm
+DIMENSION_B                     FLOAT       RIGHT    TRUE       8       0         Length     mm
+ECCENTRICITY_X                  FLOAT       RIGHT    TRUE       7       2         Length     mm
+ECCENTRICITY_Y                  FLOAT       RIGHT    TRUE       7       2         Length     mm
+EDGE_FOLD                       FLOAT       RIGHT    TRUE       7       2
+EDGE_FOLD_1                     FLOAT       RIGHT    TRUE       7       2
+EDGE_FOLD_2                     FLOAT       RIGHT    TRUE       7       2
+END_X                           FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_Y                           FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_Z                           FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_X_BASEPOINT                 FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_Y_BASEPOINT                 FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_Z_BASEPOINT                 FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_X_PROJECT                    FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_Y_PROJECT                    FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_Z_PROJECT                    FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_X_IN_WORK_PLANE             FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_Y_IN_WORK_PLANE             FLOAT       RIGHT    TRUE      20       0         Length     mm
+END_Z_IN_WORK_PLANE             FLOAT       RIGHT    TRUE      20       0         Length     mm
+END1_ANGLE_Y                    FLOAT       LEFT     TRUE       8       1         Angle      Degrees
+END1_ANGLE_Z                    FLOAT       LEFT     TRUE       8       1         Angle      Degrees
+END1_CUT_ANGLE_Y                FLOAT       LEFT     TRUE       8       1         Angle      Degrees
+END1_CUT_ANGLE_Z                FLOAT       LEFT     TRUE       8       1         Angle      Degrees
+END1_CODE                       INTEGER     LEFT     TRUE       3
+END1_SKEW                       INTEGER     LEFT     TRUE       3
+END2_ANGLE_Y                    FLOAT       LEFT     TRUE       8       1         Angle      Degrees
+END2_ANGLE_Z                    FLOAT       LEFT     TRUE       8       1         Angle      Degrees
+END2_CUT_ANGLE_Y                FLOAT       LEFT     TRUE       8       1         Angle      Degrees
+END2_CUT_ANGLE_Z                FLOAT       LEFT     TRUE       8       1         Angle      Degrees
+END2_CODE                       INTEGER     LEFT     TRUE       3
+END2_SKEW                       INTEGER     LEFT     TRUE       3
+EXTRA_LENGTH                    FLOAT       RIGHT    TRUE       8       0         Length     mm
+FLANGE_LENGTH_B                 FLOAT       LEFT     TRUE       8       0         Length     mm
+FLANGE_LENGTH_U                 FLOAT       LEFT     TRUE       8       0         Length     mm
+FLANGE_SLOPE_RATIO              FLOAT       RIGHT    TRUE       7       2
+FLANGE_THICKNESS                FLOAT       RIGHT    TRUE       7       1         Length     mm
+FLANGE_THICKNESS_1              FLOAT       RIGHT    TRUE       7       1         Length     mm
+FLANGE_THICKNESS_2              FLOAT       RIGHT    TRUE       7       1         Length     mm
+FLANGE_THICKNESS_B              FLOAT       LEFT     TRUE       4       1         Length     mm
+FLANGE_THICKNESS_U              FLOAT       LEFT     TRUE       4       1         Length     mm
+FLANGE_WIDTH                    FLOAT       RIGHT    TRUE       7       0         Length     mm
+FLANGE_WIDTH_1                  FLOAT       RIGHT    TRUE       7       0         Length     mm
+FLANGE_WIDTH_2                  FLOAT       RIGHT    TRUE       7       0         Length     mm
+FLANGE_WIDTH_B                  FLOAT       LEFT     TRUE       4       0         Length     mm
+FLANGE_WIDTH_U                  FLOAT       LEFT     TRUE       4       0         Length     mm
+FINISH                          CHARACTER   LEFT     TRUE      20
+GRADE                           CHARACTER   LEFT     TRUE      10
+GROSS_SIDE_AREA                 FLOAT       RIGHT    TRUE       7       2         Area       mm2
+GUID                            CHARACTER   LEFT     TRUE      40
+HAS_CONNECTIONS                 INTEGER     LEFT     TRUE       1
+HAS_HOLES                       INTEGER     LEFT     TRUE       1
+HEAD_TYPE                       CHARACTER   LEFT     TRUE      20       0
+HEAD_SHAPE                      CHARACTER   LEFT     TRUE      20       0
+HEIGHT                          FLOAT       RIGHT    TRUE       8       0         Length     mm
+HEIGHT_1                        FLOAT       RIGHT    TRUE       7       0         Length     mm
+HEIGHT_2                        FLOAT       RIGHT    TRUE       7       0         Length     mm
+HEIGHT_3                        FLOAT       RIGHT    TRUE       7       0         Length     mm
+HEIGHT_4                        FLOAT       RIGHT    TRUE       7       0         Length     mm
+HOLE_TOLERANCE                  FLOAT       RIGHT    TRUE       2       0         Length     mm
+HOLE_TYPE                       INTEGER     LEFT     TRUE       2
+HOLE_1_TYPE                     INTEGER     LEFT     TRUE       2
+HOLE_2_TYPE                     INTEGER     LEFT     TRUE       2
+HOLE_3_TYPE                     INTEGER     LEFT     TRUE       2
+HOLE_4_TYPE                     INTEGER     LEFT     TRUE       2
+HOLE_5_TYPE                     INTEGER     LEFT     TRUE       2
+ID                              INTEGER     LEFT     TRUE      10
+INNER_DIAMETER                  FLOAT       RIGHT    TRUE       5       0         Length     mm
+IS_BENT_PLATE                   INTEGER     LEFT     TRUE       1
+IS_ITEM                         INTEGER     LEFT     TRUE       1
+IS_POLYBEAM                     INTEGER     LEFT     TRUE       1
+IS_SPIRAL_BEAM                  INTEGER     LEFT     TRUE       1
+IS_LOFTED_PART                  INTEGER     LEFT     TRUE       1
+KEY_SHAPE                       CHARACTER   LEFT     TRUE      20       0
+LENGTH                          FLOAT       RIGHT    TRUE       8       0         Length     mm
+LENGTH_GROSS                    FLOAT       RIGHT    TRUE       8       0         Length     mm
+LONGHOLE_MAX                    FLOAT       RIGHT    TRUE       2       0         Length     mm
+LONGHOLE_MIN                    FLOAT       RIGHT    TRUE       2       0         Length     mm
+LENGTH_NET	                    FLOAT       RIGHT    TRUE       8       0         Length     mm
+LONG_HOLE_X                     FLOAT       RIGHT    TRUE       2       0         Length     mm
+LONG_HOLE_Y                     FLOAT       RIGHT    TRUE       2       0         Length     mm
+MAIN_PART                       INTEGER     LEFT     TRUE       1
+MAJOR_AXIS_LENGTH_1             FLOAT       RIGHT    TRUE       7       2         Length     mm
+MAJOR_AXIS_LENGTH_2             FLOAT       RIGHT    TRUE       7       2         Length     mm
+MATERIAL                        CHARACTER   LEFT     TRUE       7
+MATERIAL_TYPE                   CHARACTER   LEFT     TRUE      20
+MINOR_AXIS_LENGTH_1             FLOAT       RIGHT    TRUE       7       2         Length     mm
+MINOR_AXIS_LENGTH_2             FLOAT       RIGHT    TRUE       7       2         Length     mm
+MODEL_TOTAL                     INTEGER     LEFT     TRUE       5
+MODULUS_OF_ELASTICITY           FLOAT       RIGHT    TRUE       8       2
+MOMENT_OF_INERTIA_X             FLOAT       RIGHT    TRUE       7       2         Moment_of_inertia  mm4
+MOMENT_OF_INERTIA_Y             FLOAT       RIGHT    TRUE       7       2         Moment_of_inertia  mm4
+NAME                            CHARACTER   LEFT     TRUE      20
+NAME_FULL                       CHARACTER   LEFT     TRUE      20
+NAME_SHORT                      CHARACTER   LEFT     TRUE      20
+NET_SIDE_AREA                   FLOAT       RIGHT    TRUE       7       2         Area       mm2
+NEUTRAL_AXIS_LOCATION_ELASTIC_X FLOAT       RIGHT    TRUE       7       2         Length     mm
+NEUTRAL_AXIS_LOCATION_ELASTIC_Y FLOAT       RIGHT    TRUE       7       2         Length     mm
+NEUTRAL_AXIS_LOCATION_PLASTIC_X FLOAT       RIGHT    TRUE       7       2         Length     mm
+NEUTRAL_AXIS_LOCATION_PLASTIC_Y FLOAT       RIGHT    TRUE       7       2         Length     mm
+NOMINAL_DIAMETER                FLOAT       RIGHT    TRUE       7       2         Length     mm
+NOMINAL_LENGTH                  FLOAT       RIGHT    TRUE       7       2         Length     mm
+NORMALIZED_WARPING_CONSTANT     FLOAT       RIGHT    TRUE       7       2
+NUMBER_IN_PHASE(X)              INTEGER     RIGHT    TRUE       3
+NUT_SHAPE                       CHARACTER   LEFT     TRUE      20
+NUTS_COUNT                      INTEGER     LEFT     TRUE       5
+OBJECT_DESCRIPTION              CHARACTER   LEFT     TRUE      30
+OBJECT_LOCKED                   CHARACTER   LEFT     TRUE       3
+OBJECT_TYPE                     CHARACTER   LEFT     TRUE       2
+OWNER                           CHARACTER   LEFT     TRUE      10
+PAGE                            INTEGER     LEFT     FALSE      2
+PAGES                           INTEGER     LEFT     FALSE      2
+PART_POS                        CHARACTER   LEFT     TRUE      10
+PART_PREFIX                     CHARACTER   LEFT     TRUE      10
+PART_SERIAL_NUMBER              INTEGER     LEFT     TRUE      10
+PART_START_NUMBER               INTEGER     LEFT     TRUE      10
+PERIMETER                       FLOAT       RIGHT    TRUE       8       0         Length     mm
+PHASE                           INTEGER     LEFT     TRUE       5
+PLAIN_HOLE_TYPE                 INTEGER     LEFT     TRUE       1
+PLASTIC_MODULUS_X               FLOAT       RIGHT    TRUE       7       2
+PLASTIC_MODULUS_Y               FLOAT       RIGHT    TRUE       7       2
+PLATE_DENSITY                   FLOAT       RIGHT    TRUE       8       0         Density    kg/m3
+PLATE_THICKNESS                 FLOAT       RIGHT    TRUE       7       0         Length     mm
+PLATE_TOP_VIEW                  CHARACTER   LEFT     TRUE      20
+POISSONS_RATIO                  FLOAT       RIGHT    TRUE       8       2
+POLAR_RADIUS_OF_GYRATION        FLOAT       RIGHT    TRUE       7       2
+POUR_PHASE                      INTEGER     LEFT     TRUE      10
+PREFIX                          CHARACTER   LEFT     TRUE      10
+PRELIM_MARK                     CHARACTER   LEFT     TRUE      20
+PROCURED_LENGTH					FLOAT       RIGHT    TRUE       8       0         Length     mm
+PROCURED_MATERIAL				CHARACTER   LEFT     TRUE       7
+PROCURED_PROFILE				CHARACTER   LEFT     TRUE      14
+PROCUREMENT_NUMBER              INTEGER     LEFT     TRUE      10
+PROCUREMENT_POSITION            CHARACTER   LEFT     TRUE      10
+PROCUREMENT_STATUS              INTEGER     LEFT     TRUE       2
+PRODUCT_NAME                    CHARACTER   LEFT     TRUE      20
+PROFILE                         CHARACTER   LEFT     TRUE      14
+PROFILE_DENSITY                 FLOAT       RIGHT    TRUE       8       0         Density    kg/m3
+RADIUS_OF_GYRATION_X            FLOAT       RIGHT    TRUE       7       2
+RADIUS_OF_GYRATION_Y            FLOAT       RIGHT    TRUE       7       2
+ROUNDING_RADIUS                 FLOAT       RIGHT    TRUE       7       2         Length     mm
+ROUNDING_RADIUS_1               FLOAT       RIGHT    TRUE       7       2         Length     mm
+ROUNDING_RADIUS_2               FLOAT       RIGHT    TRUE       7       2         Length     mm
+ROW_IN_ALLPAGES                 INTEGER     LEFT     FALSE      3
+ROW_IN_PAGE                     INTEGER     LEFT     FALSE      3
+SECTION_MODULUS_X               FLOAT       RIGHT    TRUE       7       2         Volume     mm3
+SECTION_MODULUS_Y               FLOAT       RIGHT    TRUE       7       2         Volume     mm3
+SITE_WORKSHOP                   CHARACTER   LEFT     TRUE      10
+SPECIAL_HOLE_1_X                 FLOAT       RIGHT    TRUE       2       0         Length     mm
+SPECIAL_HOLE_2_X                 FLOAT       RIGHT    TRUE       2       0         Length     mm
+SPECIAL_HOLE_3_X                 FLOAT       RIGHT    TRUE       2       0         Length     mm
+SPECIAL_HOLE_4_X                 FLOAT       RIGHT    TRUE       2       0         Length     mm
+SPECIAL_HOLE_5_X                 FLOAT       RIGHT    TRUE       2       0         Length     mm
+SPECIAL_HOLE_1_Y                 FLOAT       RIGHT    TRUE       2       0         Length     mm
+SPECIAL_HOLE_2_Y                 FLOAT       RIGHT    TRUE       2       0         Length     mm
+SPECIAL_HOLE_3_Y                 FLOAT       RIGHT    TRUE       2       0         Length     mm
+SPECIAL_HOLE_4_Y                 FLOAT       RIGHT    TRUE       2       0         Length     mm
+SPECIAL_HOLE_5_Y                 FLOAT       RIGHT    TRUE       2       0         Length     mm
+THERMAL_DILATATION              FLOAT       RIGHT    TRUE       8       6
+THREAD_IN_MATERIAL              INTEGER     LEFT     TRUE       3
+THREAD_DIAMETER                 FLOAT       LEFT     TRUE       5       0         Length     mm
+TIME                            CHARACTER   LEFT     TRUE      10
+TITLE1                          CHARACTER   LEFT     TRUE      40
+TITLE2                          CHARACTER   LEFT     TRUE      40
+TITLE3                          CHARACTER   LEFT     TRUE      40
+TOP_LEVEL                       CHARACTER   LEFT     TRUE      10
+TOP_LEVEL_BASEPOINT             CHARACTER   LEFT     TRUE      10
+TOP_LEVEL_GLOBAL                CHARACTER   LEFT     TRUE      10
+TOP_LEVEL_PROJECT               CHARACTER   LEFT     TRUE      10
+TYPE                            CHARACTER   LEFT     TRUE      20
+TYPE1                           CHARACTER   LEFT     TRUE      30
+TYPE2                           CHARACTER   LEFT     TRUE      10
+TYPE3                           CHARACTER   LEFT     TRUE      10
+TYPE4                           CHARACTER   LEFT     TRUE      10
+WASHERS_COUNT                   INTEGER     LEFT     TRUE       5
+WASHER_SHAPE                    CHARACTER   LEFT     TRUE      20
+WEB_HEIGHT                      FLOAT       RIGHT    TRUE       7       0         Length     mm
+WEIGHT                          FLOAT       RIGHT    TRUE       8       0         Weight     kg
+WEIGHT_NET                      FLOAT       RIGHT    TRUE       8       0         Weight     kg
+VOLUME                          FLOAT       RIGHT    TRUE       8       2         Volume     m3
+
+[BINDINGS] // Do NOT remove this line
+ASSEMBLY = HISTORY.OWNER
+ASSEMBLY = ADDED_TO_POUR_UNIT
+ASSEMBLY = ADDED_TO_REBAR_ASSEMBLY
+ASSEMBLY = AREA
+ASSEMBLY = AREA_PLAN
+ASSEMBLY = AREA_PROJECTION_GXY_NET
+ASSEMBLY = AREA_PROJECTION_GXZ_NET
+ASSEMBLY = AREA_PROJECTION_GYZ_NET
+ASSEMBLY = AREA_PROJECTION_GXY_GROSS
+ASSEMBLY = AREA_PROJECTION_GXZ_GROSS
+ASSEMBLY = AREA_PROJECTION_GYZ_GROSS
+ASSEMBLY = AREA_PROJECTION_XY_NET
+ASSEMBLY = AREA_PROJECTION_XZ_NET
+ASSEMBLY = AREA_PROJECTION_YZ_NET
+ASSEMBLY = AREA_PROJECTION_XY_GROSS
+ASSEMBLY = AREA_PROJECTION_XZ_GROSS
+ASSEMBLY = AREA_PROJECTION_YZ_GROSS
+ASSEMBLY = AREA_PGZ
+ASSEMBLY = AREA_NGZ
+ASSEMBLY = AREA_PGX
+ASSEMBLY = AREA_NGX
+ASSEMBLY = AREA_PGY
+ASSEMBLY = AREA_NGY
+ASSEMBLY = AREA_PZ
+ASSEMBLY = AREA_NZ
+ASSEMBLY = AREA_PX
+ASSEMBLY = AREA_NX
+ASSEMBLY = AREA_PY
+ASSEMBLY = AREA_NY
+ASSEMBLY = ASSEMBLY_BOTTOM_LEVEL
+ASSEMBLY = ASSEMBLY_BOTTOM_LEVEL_BASEPOINT
+ASSEMBLY = ASSEMBLY_BOTTOM_LEVEL_GLOBAL
+ASSEMBLY = ASSEMBLY_BOTTOM_LEVEL_PROJECT
+ASSEMBLY = ASSEMBLY_BOTTOM_LEVEL_UNFORMATTED
+ASSEMBLY = ASSEMBLY_BOTTOM_LEVEL_UNFORMATTED_BASEPOINT
+ASSEMBLY = ASSEMBLY_BOTTOM_LEVEL_UNFORMATTED_PROJECT
+ASSEMBLY = ASSEMBLY_BOTTOM_LEVEL_GLOBAL_UNFORMATTED
+ASSEMBLY = ASSEMBLY_NAME
+ASSEMBLY = ASSEMBLY_PLWEIGHT
+ASSEMBLY = ASSEMBLY_POS
+ASSEMBLY = ASSEMBLY_POSITION_CODE
+ASSEMBLY = ASSEMBLY_PREFIX
+ASSEMBLY = ASSEMBLY_SERIAL_NUMBER
+ASSEMBLY = ASSEMBLY_START_NUMBER
+ASSEMBLY = ASSEMBLY_TOP_LEVEL
+ASSEMBLY = ASSEMBLY_TOP_LEVEL_BASEPOINT
+ASSEMBLY = ASSEMBLY_TOP_LEVEL_GLOBAL
+ASSEMBLY = ASSEMBLY_TOP_LEVEL_PROJECT
+ASSEMBLY = ASSEMBLY_TOP_LEVEL_UNFORMATTED
+ASSEMBLY = ASSEMBLY_TOP_LEVEL_UNFORMATTED_BASEPOINT
+ASSEMBLY = ASSEMBLY_TOP_LEVEL_UNFORMATTED_PROJECT
+ASSEMBLY = ASSEMBLY_TOP_LEVEL_GLOBAL_UNFORMATTED
+ASSEMBLY = BOTTOM_LEVEL
+ASSEMBLY = BOTTOM_LEVEL_BASEPOINT
+ASSEMBLY = BOTTOM_LEVEL_GLOBAL
+ASSEMBLY = BOTTOM_LEVEL_PROJECT
+ASSEMBLY = BOTTOM_LEVEL_UNFORMATTED
+ASSEMBLY = BOTTOM_LEVEL_UNFORMATTED_BASEPOINT
+ASSEMBLY = BOTTOM_LEVEL_UNFORMATTED_PROJECT
+ASSEMBLY = BOTTOM_LEVEL_GLOBAL_UNFORMATTED
+ASSEMBLY = BOUNDING_BOX_MIN_X
+ASSEMBLY = BOUNDING_BOX_MIN_Y
+ASSEMBLY = BOUNDING_BOX_MIN_Z
+ASSEMBLY = BOUNDING_BOX_MIN_X_BASEPOINT
+ASSEMBLY = BOUNDING_BOX_MIN_Y_BASEPOINT
+ASSEMBLY = BOUNDING_BOX_MIN_Z_BASEPOINT
+ASSEMBLY = BOUNDING_BOX_MIN_X_PROJECT
+ASSEMBLY = BOUNDING_BOX_MIN_Y_PROJECT
+ASSEMBLY = BOUNDING_BOX_MIN_Z_PROJECT
+ASSEMBLY = BOUNDING_BOX_MAX_X
+ASSEMBLY = BOUNDING_BOX_MAX_Y
+ASSEMBLY = BOUNDING_BOX_MAX_Z
+ASSEMBLY = BOUNDING_BOX_MAX_X_BASEPOINT
+ASSEMBLY = BOUNDING_BOX_MAX_Y_BASEPOINT
+ASSEMBLY = BOUNDING_BOX_MAX_Z_BASEPOINT
+ASSEMBLY = BOUNDING_BOX_MAX_X_PROJECT
+ASSEMBLY = BOUNDING_BOX_MAX_Y_PROJECT
+ASSEMBLY = BOUNDING_BOX_MAX_Z_PROJECT
+ASSEMBLY = COG_X
+ASSEMBLY = COG_Y
+ASSEMBLY = COG_Z
+ASSEMBLY = WEIGHT
+ASSEMBLY = PREFIX
+BOLT = HISTORY.OWNER
+BOLT  = ADDED_TO_POUR_UNIT
+BOLT = ASSEMBLY.ASSEMBLY_NAME
+BOLT = ASSEMBLY.ASSEMBLY_POS
+BOLT = ASSEMBLY.ASSEMBLY_POSITION_CODE
+BOLT = ASSEMBLY.ASSEMBLY_PREFIX
+BOLT = ASSEMBLY.ASSEMBLY_SERIAL_NUMBER
+BOLT = ASSEMBLY.ASSEMBLY_START_NUMBER
+BOLT = ASSEMBLY.ASSEMBLY_TOP_LEVEL
+BOLT = ASSEMBLY.ASSEMBLY_TOP_LEVEL_BASEPOINT
+BOLT = ASSEMBLY.ASSEMBLY_TOP_LEVEL_GLOBAL
+BOLT = ASSEMBLY.ASSEMBLY_TOP_LEVEL_PROJECT
+BOLT = ASSEMBLY.BOTTOM_LEVEL
+BOLT = ASSEMBLY.BOTTOM_LEVEL_BASEPOINT
+BOLT = ASSEMBLY.BOTTOM_LEVEL_GLOBAL
+BOLT = ASSEMBLY.BOTTOM_LEVEL_PROJECT
+BOLT = ASSEMBLY.BOTTOM_LEVEL_GLOBAL_UNFORMATTED
+BOLT = ASSEMBLY.BOTTOM_LEVEL_UNFORMATTED
+BOLT = ASSEMBLY.BOTTOM_LEVEL_UNFORMATTED_BASEPOINT
+BOLT = ASSEMBLY.BOTTOM_LEVEL_UNFORMATTED_PROJECT
+BOLT = ASSEMBLY.COG_X
+BOLT = ASSEMBLY.COG_Y
+BOLT = ASSEMBLY.COG_Z
+BOLT = ASSEMBLY.COG_X_BASEPOINT
+BOLT = ASSEMBLY.COG_Y_BASEPOINT
+BOLT = ASSEMBLY.COG_Z_BASEPOINT
+BOLT = ASSEMBLY.COG_X_PROJECT
+BOLT = ASSEMBLY.COG_Y_PROJECT
+BOLT = ASSEMBLY.COG_Z_PROJECT
+BOLT = ASSEMBLY.GUID
+BOLT = ASSEMBLY.ID
+BOLT = ASSEMBLY.MODEL_TOTAL
+BOLT = ASSEMBLY.NUMBER
+BOLT = ASSEMBLY.PHASE
+BOLT = ASSEMBLY.PHASE.NAME
+BOLT = ASSEMBLY.TOP_LEVEL
+BOLT = ASSEMBLY.TOP_LEVEL_BASEPOINT
+BOLT = ASSEMBLY.TOP_LEVEL_GLOBAL
+BOLT = ASSEMBLY.TOP_LEVEL_PROJECT
+BOLT = ASSEMBLY_POS
+BOLT = BOLT_COUNTERSUNK
+BOLT = BOLT_THREAD_LENGTH
+BOLT = BOLT_EDGE_DISTANCE
+BOLT = BOLT_EDGE_DISTANCE_MIN
+BOLT = BOLT_MATERIAL_LENGTH
+BOLT = BOLT_NPARTS
+BOLT = BOLT_STANDARD
+BOLT = CONNECTED_ASSEMBLIES
+BOLT = CONNECTED_PARTS
+BOLT = CONTENTTYPE
+BOLT = CURRENT_PHASE
+BOLT = DATE
+BOLT = DIAMETER
+BOLT = EXTRA_LENGTH
+BOLT = FINISH
+BOLT = GRADE
+BOLT = GUID
+BOLT = HEAD_TYPE
+BOLT = HEAD_SHAPE
+BOLT = ID
+BOLT = KEY_SHAPE
+BOLT = LENGTH
+BOLT = LENGTH_GROSS
+BOLT = MATERIAL
+BOLT = MODEL_TOTAL
+BOLT = NAME
+BOLT = NAME_FULL
+BOLT = NAME_SHORT
+BOLT = NOMINAL_DIAMETER
+BOLT = NOMINAL_LENGTH
+BOLT = NUMBER#1
+BOLT = NUMBER_IN_PHASE(X)
+BOLT = NUT_SHAPE
+BOLT = NUTS_COUNT
+BOLT = OBJECT_DESCRIPTION
+BOLT = OBJECT_LOCKED
+BOLT = OBJECT_TYPE
+BOLT = OWNER
+BOLT = PAGE
+BOLT = PAGES
+BOLT = PHASE
+BOLT = PHASE.COMMENT
+BOLT = PHASE.NAME
+BOLT = ROW_IN_ALLPAGES
+BOLT = ROW_IN_PAGE
+BOLT = SITE_WORKSHOP
+BOLT = THREAD_DIAMETER
+BOLT = THREAD_IN_MATERIAL
+BOLT = TIME
+BOLT = TITLE1
+BOLT = TITLE2
+BOLT = TITLE3
+BOLT = TYPE
+BOLT = TYPE1
+BOLT = TYPE2
+BOLT = TYPE3
+BOLT = TYPE4
+BOLT = WASHERS_COUNT
+BOLT = WASHER_SHAPE
+BOLT = WEIGHT
+BOLT = HOLE.DEPTH
+BOLT = HOLE.DIAMETER
+BOLT = HOLE.DIAMETER_X
+BOLT = HOLE.DIAMETER_Y
+BOLT = HOLE.GUID
+BOLT = HOLE.HOLE_TOLERANCE
+BOLT = HOLE.HOLE_TYPE
+BOLT = HOLE.HOLE_1_TYPE
+BOLT = HOLE.HOLE_2_TYPE
+BOLT = HOLE.HOLE_3_TYPE
+BOLT = HOLE.HOLE_4_TYPE
+BOLT = HOLE.HOLE_5_TYPE
+BOLT = HOLE.ID
+BOLT = HOLE.LONGHOLE_MAX
+BOLT = HOLE.LONGHOLE_MIN
+BOLT = HOLE.LONG_HOLE_X
+BOLT = HOLE.LONG_HOLE_Y
+BOLT = HOLE.NUMBER#1
+BOLT = HOLE.OBJECT_DESCRIPTION
+BOLT = HOLE.OBJECT_LOCKED
+BOLT = HOLE.OBJECT_TYPE
+BOLT = HOLE.OWNER
+BOLT = HOLE.PHASE
+BOLT = HOLE.PHASE.COMMENT
+BOLT = HOLE.PHASE.NAME
+BOLT = HOLE.PLAIN_HOLE_TYPE
+BOLT = HOLE.SPECIAL_HOLE_1_X
+BOLT = HOLE.SPECIAL_HOLE_2_X
+BOLT = HOLE.SPECIAL_HOLE_3_X
+BOLT = HOLE.SPECIAL_HOLE_4_X
+BOLT = HOLE.SPECIAL_HOLE_5_X
+BOLT = HOLE.SPECIAL_HOLE_1_Y
+BOLT = HOLE.SPECIAL_HOLE_2_Y
+BOLT = HOLE.SPECIAL_HOLE_3_Y
+BOLT = HOLE.SPECIAL_HOLE_4_Y
+BOLT = HOLE.SPECIAL_HOLE_5_Y
+BOLT = NUT.DIAMETER
+BOLT = NUT.GUID
+BOLT = NUT.ID
+BOLT = NUT.INNER_DIAMETER
+BOLT = NUT.NAME
+BOLT = NUT.NAME_SHORT
+BOLT = NUT.NUMBER#1
+BOLT = NUT.OBJECT_DESCRIPTION
+BOLT = NUT.OBJECT_LOCKED
+BOLT = NUT.OBJECT_TYPE
+BOLT = NUT.OWNER
+BOLT = NUT.PHASE
+BOLT = NUT.PHASE.COMMENT
+BOLT = NUT.PHASE.NAME
+BOLT = NUT.TYPE
+BOLT = NUT.WEIGHT
+BOLT = WASHER.DIAMETER
+BOLT = WASHER.GUID
+BOLT = WASHER.ID
+BOLT = WASHER.INNER_DIAMETER
+BOLT = WASHER.MATERIAL
+BOLT = WASHER.NAME
+BOLT = WASHER.NAME_SHORT
+BOLT = WASHER.NUMBER#1
+BOLT = WASHER.OBJECT_DESCRIPTION
+BOLT = WASHER.OBJECT_LOCKED
+BOLT = WASHER.OBJECT_TYPE
+PART = WEB_HEIGHT
+PART = ACN
+PART = AREA
+PART = AREA_GROSS
+PART = AREA_NET
+PART = AREA_PER_TONS
+PART = AREA_PLAN
+PART = AREA_PROJECTION_GXY_NET
+PART = AREA_PROJECTION_GXZ_NET
+PART = AREA_PROJECTION_GYZ_NET
+PART = AREA_PROJECTION_GXY_GROSS
+PART = AREA_PROJECTION_GXZ_GROSS
+PART = AREA_PROJECTION_GYZ_GROSS
+PART = AREA_PROJECTION_XY_NET
+PART = AREA_PROJECTION_XZ_NET
+PART = AREA_PROJECTION_YZ_NET
+PART = AREA_PROJECTION_XY_GROSS
+PART = AREA_PROJECTION_XZ_GROSS
+PART = AREA_PROJECTION_YZ_GROSS
+PART = AREA_PGZ
+PART = AREA_NGZ
+PART = AREA_PGX
+PART = AREA_NGX
+PART = AREA_PGY
+PART = AREA_NGY
+PART = AREA_PZ
+PART = AREA_NZ
+PART = AREA_PX
+PART = AREA_NX
+PART = AREA_PY
+PART = AREA_NY
+PART = ASSEMBLY_BOTTOM_LEVEL
+PART = ASSEMBLY_BOTTOM_LEVEL_BASEPOINT
+PART = ASSEMBLY_BOTTOM_LEVEL_GLOBAL
+PART = ASSEMBLY_BOTTOM_LEVEL_PROJECT
+PART = ASSEMBLY_BOTTOM_LEVEL_UNFORMATTED
+PART = ASSEMBLY_BOTTOM_LEVEL_UNFORMATTED_BASEPOINT
+PART = ASSEMBLY_BOTTOM_LEVEL_UNFORMATTED_PROJECT
+PART = ASSEMBLY_BOTTOM_LEVEL_GLOBAL_UNFORMATTED
+PART = ASSEMBLY_DEFAULT_PREFIX
+PART = ASSEMBLY_POS
+PART = ASSEMBLY_START_NUMBER
+PART = ASSEMBLY_TOP_LEVEL
+PART = ASSEMBLY_TOP_LEVEL_BASEPOINT
+PART = ASSEMBLY_TOP_LEVEL_GLOBAL
+PART = ASSEMBLY_TOP_LEVEL_PROJECT
+PART = ASSEMBLY_TOP_LEVEL_UNFORMATTED
+PART = ASSEMBLY_TOP_LEVEL_UNFORMATTED_BASEPOINT
+PART = ASSEMBLY_TOP_LEVEL_UNFORMATTED_PROJECT
+PART = ASSEMBLY_TOP_LEVEL_GLOBAL_UNFORMATTED
+PART = BOTTOM_LEVEL
+PART = BOTTOM_LEVEL_BASEPOINT
+PART = BOTTOM_LEVEL_GLOBAL
+PART = BOTTOM_LEVEL_PROJECT
+PART = BOTTOM_LEVEL_UNFORMATTED
+PART = BOTTOM_LEVEL_UNFORMATTED_BASEPOINT
+PART = BOTTOM_LEVEL_UNFORMATTED_PROJECT
+PART = BOTTOM_LEVEL_GLOBAL_UNFORMATTED
+PART = BOUNDING_BOX_MIN_X
+PART = BOUNDING_BOX_MIN_Y
+PART = BOUNDING_BOX_MIN_Z
+PART = BOUNDING_BOX_MIN_X_BASEPOINT
+PART = BOUNDING_BOX_MIN_Y_BASEPOINT
+PART = BOUNDING_BOX_MIN_Z_BASEPOINT
+PART = BOUNDING_BOX_MIN_X_PROJECT
+PART = BOUNDING_BOX_MIN_Y_PROJECT
+PART = BOUNDING_BOX_MIN_Z_PROJECT
+PART = BOUNDING_BOX_MAX_X
+PART = BOUNDING_BOX_MAX_Y
+PART = BOUNDING_BOX_MAX_Z
+PART = BOUNDING_BOX_MAX_X_BASEPOINT
+PART = BOUNDING_BOX_MAX_Y_BASEPOINT
+PART = BOUNDING_BOX_MAX_Z_BASEPOINT
+PART = BOUNDING_BOX_MAX_X_PROJECT
+PART = BOUNDING_BOX_MAX_Y_PROJECT
+PART = BOUNDING_BOX_MAX_Z_PROJECT
+PART = CLASS_ATTR
+PART = COG_X
+PART = COG_Y
+PART = COG_Z
+PART = COG_X_BASEPOINT
+PART = COG_Y_BASEPOINT
+PART = COG_Z_BASEPOINT
+PART = COG_X_PROJECT
+PART = COG_Y_PROJECT
+PART = COG_Z_PROJECT
+PART = CONTENTTYPE
+PART = COVER_AREA
+PART = CURRENT_PHASE
+PART = CURVED_SEGMENTS
+PART = DATE
+PART = DIMENSION_A
+PART = DIMENSION_B
+PART = END_X
+PART = END_Y
+PART = END_Z
+PART = END_X_BASEPOINT
+PART = END_Y_BASEPOINT
+PART = END_Z_BASEPOINT
+PART = END_X_PROJECT
+PART = END_Y_PROJECT
+PART = END_Z_PROJECT
+PART = END_X_IN_WORK_PLANE
+PART = END_Y_IN_WORK_PLANE
+PART = END_Z_IN_WORK_PLANE
+PART = END1_ANGLE_Y
+PART = END1_ANGLE_Z
+PART = END1_CUT_ANGLE_Y
+PART = END1_CUT_ANGLE_Z
+PART = END1_CODE
+PART = END1_SKEW
+PART = END2_ANGLE_Y
+PART = END2_ANGLE_Z
+PART = END2_CUT_ANGLE_Y
+PART = END2_CUT_ANGLE_Z
+PART = END2_CODE
+PART = END2_SKEW
+PART = FINISH
+PART = FLANGE_LENGTH_B
+PART = FLANGE_LENGTH_U
+PART = BIND_TO_LEVELS
+PART = GROSS_SIDE_AREA
+PART = GUID
+PART = HAS_CONNECTIONS
+PART = HAS_HOLES
+PART = HEIGHT
+PART = ID
+PART = IS_BENT_PLATE
+PART = IS_ITEM
+PART = IS_POLYBEAM
+PART = IS_SPIRAL_BEAM
+PART = IS_LOFTED_PART
+PART = LENGTH
+PART = LENGTH_GROSS
+PART = LENGTH_NET
+PART = MAIN_PART
+PART = MATERIAL
+PART = MATERIAL_TYPE
+PART = MATERIAL.ACTIVE_DESIGN_CODE
+PART = MATERIAL.ALIAS_NAME1
+PART = MATERIAL.ALIAS_NAME2
+PART = MATERIAL.ALIAS_NAME3
+PART = MATERIAL.MODULUS_OF_ELASTICITY
+PART = MATERIAL.PLATE_DENSITY
+PART = MATERIAL.POISSONS_RATIO
+PART = MATERIAL.PROFILE_DENSITY
+PART = MATERIAL.THERMAL_DILATATION
+PART = MODEL_TOTAL
+PART = NAME
+PART = NET_SIDE_AREA
+PART = NUMBER#1
+PART = NUMBER_IN_PHASE(X)
+PART = OBJECT_DESCRIPTION
+PART = OBJECT_LOCKED
+PART = OBJECT_TYPE
+PART = OWNER
+PART = PAGE
+PART = PAGES
+PART = PART_POS
+PART = PART_PREFIX
+PART = PART_SERIAL_NUMBER
+PART = PART_START_NUMBER
+PART = PERIMETER
+PART = PHASE
+PART = PHASE.COMMENT
+PART = PHASE.NAME
+PART = PLATE_TOP_VIEW
+PART = POUR_PHASE
+PART = PRELIM_MARK
+PART = PROCURED_LENGTH
+PART = PROCURED_MATERIAL
+PART = PROCURED_PROFILE
+PART = PROCUREMENT_NUMBER
+PART = PROCUREMENT_POSITION
+PART = PROCUREMENT_STATUS
+PART = PRODUCT_NAME
+PART = PROFILE
+PART = PROFILE.CANTILEVER
+PART = PROFILE.COVER_AREA
+PART = PROFILE.CROSS_SECTION_AREA
+PART = PROFILE.CROSS_SECTION_AREA_START
+PART = PROFILE.CROSS_SECTION_AREA_END
+PART = PROFILE.ECCENTRICITY_X
+PART = PROFILE.ECCENTRICITY_Y
+PART = PROFILE.EDGE_FOLD
+PART = PROFILE.EDGE_FOLD_1
+PART = PROFILE.EDGE_FOLD_2
+PART = PROFILE.DIAMETER
+PART = PROFILE.DIAMETER_1
+PART = PROFILE.DIAMETER_2
+PART = PROFILE.FLANGE_SLOPE_RATIO
+PART = PROFILE.FLANGE_THICKNESS
+PART = PROFILE.FLANGE_THICKNESS_1
+PART = PROFILE.FLANGE_THICKNESS_2
+PART = PROFILE.FLANGE_THICKNESS_B
+PART = PROFILE.FLANGE_THICKNESS_U
+PART = PROFILE.FLANGE_WIDTH
+PART = PROFILE.FLANGE_WIDTH_1
+PART = PROFILE.FLANGE_WIDTH_2
+PART = PROFILE.FLANGE_WIDTH_B
+PART = PROFILE.FLANGE_WIDTH_U
+PART = PROFILE.ANGLE
+PART = PROFILE.HEIGHT
+PART = PROFILE.HEIGHT_1
+PART = PROFILE.HEIGHT_2
+PART = PROFILE.HEIGHT_3
+PART = PROFILE.HEIGHT_4
+PART = PROFILE.MAJOR_AXIS_LENGTH_1
+PART = PROFILE.MAJOR_AXIS_LENGTH_2
+PART = PROFILE.MINOR_AXIS_LENGTH_1
+PART = PROFILE.MINOR_AXIS_LENGTH_2
+PART = PROFILE.MOMENT_OF_INERTIA_X
+PART = PROFILE.MOMENT_OF_INERTIA_Y
+PART = PROFILE.NEUTRAL_AXIS_LOCATION_ELASTIC_X
+PART = PROFILE.NEUTRAL_AXIS_LOCATION_ELASTIC_Y
+PART = PROFILE.NEUTRAL_AXIS_LOCATION_PLASTIC_X
+PART = PROFILE.NEUTRAL_AXIS_LOCATION_PLASTIC_Y
+PART = PROFILE.NORMALIZED_WARPING_CONSTANT
+PART = PROFILE.PLASTIC_MODULUS_X
+PART = PROFILE.PLASTIC_MODULUS_Y
+PART = PROFILE.PLATE_THICKNESS
+PART = PROFILE.POLAR_RADIUS_OF_GYRATION
+PART = PROFILE.RADIUS_OF_GYRATION_X
+PART = PROFILE.RADIUS_OF_GYRATION_Y
+PART = PROFILE.ROUNDING_RADIUS
+PART = PROFILE.ROUNDING_RADIUS_1
+PART = PROFILE.ROUNDING_RADIUS_2
+PART = PROFILE.SECTION_MODULUS_X
+PART = PROFILE.SECTION_MODULUS_Y
+PART = WEIGHT
+PART = WEIGHT_NET
+PART = VOLUME

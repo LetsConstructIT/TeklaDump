@@ -1,0 +1,63 @@
+name: build
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # Compiling against every supported Tekla catches API drift on each new release for free, and
+  # needs no Tekla installed: the packages ship the assemblies, and ExcludeAssets="runtime" only
+  # stops them being copied.
+  compile:
+    name: compile (Tekla ${{ matrix.tekla }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tekla: ['2021.0.0', '2023.0.1', '2024.0.4', '2025.0.0', '2026.0.3']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore TeklaDump.slnx -p:TeklaOpenApiVersion=${{ matrix.tekla }}
+
+      - name: Build
+        run: dotnet build TeklaDump.slnx --no-restore -c Release -p:TeklaOpenApiVersion=${{ matrix.tekla }}
+
+  # Everything else runs once, on the floor build — the one the release is compiled from.
+  test:
+    name: test and gates
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Build
+        run: dotnet build TeklaDump.slnx -c Release
+
+      # No Tekla installation needed: the test project takes the Open API packages WITH their
+      # runtime assets, so typeof(Beam) and new Beam() work. Anything that talks to the model
+      # database is golden-file territory and is not in this suite.
+      - name: Unit tests
+        run: dotnet test --project source/TeklaDump.Tests/TeklaDump.Tests.csproj -c Release --no-build
+
+      # The "no model writes" promise, enforced rather than asserted.
+      - name: No model writes
+        shell: pwsh
+        run: ./scripts/Check-SideEffects.ps1 -Path source -Quiet
+
+      # The committed schema must equal what the generator produces from the extractors right now.
+      - name: Schema is current
+        shell: pwsh
+        run: ./scripts/Generate-Schema.ps1 -Check -Configuration Release

@@ -1,0 +1,88 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # GitVersion needs the full history
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: gittools/actions/gitversion/setup@v3.0.0
+        with:
+          versionSpec: '6.x'
+
+      - id: version
+        uses: gittools/actions/gitversion/execute@v3.0.0
+
+      # Release compiles against the 2021 floor (Directory.Build.props), which is what makes one
+      # binary work on Tekla 2021 through 2026.
+      - name: Build
+        run: dotnet build TeklaDump.slnx -c Release -p:Version=${{ steps.version.outputs.semVer }}
+
+      - name: Test
+        run: dotnet test --project source/TeklaDump.Tests/TeklaDump.Tests.csproj -c Release --no-build
+
+      - name: Gates
+        shell: pwsh
+        run: |
+          ./scripts/Check-SideEffects.ps1 -Path source -Quiet
+          ./scripts/Generate-Schema.ps1 -Check -Configuration Release
+
+      - name: Pack
+        run: >
+          dotnet pack source/TeklaDump/TeklaDump.csproj -c Release --no-build
+          -p:Version=${{ steps.version.outputs.semVer }} -o artifacts
+
+      # The CLI ships with System.Memory beside it: the Tekla packages are compile-only, so nothing
+      # else puts it next to the exe, and without it the exe dies on first connect.
+      - name: Stage the CLI
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.semVer }}"
+          $staging = "artifacts/tekla-dump-$version"
+          New-Item -ItemType Directory -Force $staging | Out-Null
+          Copy-Item source/TeklaDump.Cli/bin/Release/* $staging -Recurse
+          Compress-Archive -Path "$staging/*" -DestinationPath "artifacts/tekla-dump-$version.zip"
+
+      # The macro bundle is the .cs source, its 96x96 catalog thumbnail, and the DLL the macro
+      # reflection-loads — released together because the macro and the DLL must stay in step.
+      - name: Stage the macro bundle
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.semVer }}"
+          $staging = "artifacts/macro"
+          New-Item -ItemType Directory -Force "$staging/TeklaDump" | Out-Null
+          Copy-Item source/TeklaDump.Macro/DumpSelection.cs $staging
+          Copy-Item source/TeklaDump.Macro/DumpSelection.png $staging
+          Copy-Item source/TeklaDump.Macro/README.md $staging
+          Copy-Item source/TeklaDump/bin/Release/net48/TeklaDump.dll "$staging/TeklaDump"
+          Compress-Archive -Path "$staging/*" -DestinationPath "artifacts/tekla-dump-macro-$version.zip"
+
+      - name: Push to nuget.org
+        run: >
+          dotnet nuget push "artifacts/*.nupkg" --source https://api.nuget.org/v3/index.json
+          --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+
+      - name: GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/tekla-dump-*.zip
+            artifacts/*.nupkg
+          body: |
+            See CHANGELOG.md. Schema version and the Tekla Open API floor this build was compiled
+            against are recorded there.

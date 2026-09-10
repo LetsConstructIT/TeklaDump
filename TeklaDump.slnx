@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="source/TeklaDump/TeklaDump.csproj" />
+  <Project Path="source/TeklaDump.SchemaGen/TeklaDump.SchemaGen.csproj" />
+  <Project Path="source/TeklaDump.Cli/TeklaDump.Cli.csproj" />
+  <Project Path="source/TeklaDump.Macro/TeklaDump.Macro.csproj" />
+  <Project Path="source/TeklaDump.Tests/TeklaDump.Tests.csproj" />
+</Solution>

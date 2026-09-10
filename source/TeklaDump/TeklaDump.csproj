@@ -1,0 +1,65 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>TeklaDump</RootNamespace>
+        <AssemblyName>TeklaDump</AssemblyName>
+        <!-- AnyCPU on purpose: this DLL is loaded INTO the host's process (Tekla itself, a plugin,
+             the CLI), and the host decides the bitness. Only the exe and the tests are x64. -->
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <!-- CS1591 ("missing XML comment on a public member") only. The types that carry real
+             decisions are documented at length; forcing a doc comment onto every enum member
+             produces "The float." on TemplateValueType.Float and trains people to skim the ones
+             that matter. CS1573 (some params documented, others not) stays ON — that one always
+             means a doc comment that fell out of step with its signature. -->
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+        <PackageId>TeklaDump</PackageId>
+        <Description>Serializes Tekla Structures model objects to a documented JSON / NDJSON schema with an explicit settable-vs-derived split, so an LLM can turn a real model back into Open API code. No model writes, no telemetry.</Description>
+        <PackageTags>tekla;tekla-structures;open-api;json;ndjson;bim;llm</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <!-- The extractors, sinks, catalogs and parsers are internal; the test project drives them
+         directly rather than through a Tekla-dependent surface. -->
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>TeklaDump.Tests</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>TeklaDump.SchemaGen</_Parameter1>
+        </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <!-- The CLI's ASSEMBLY name, which is tekla-dump; the project name would not match. -->
+            <_Parameter1>tekla-dump</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <!--
+        Tekla Open API — COMPILE ONLY.
+
+        ExcludeAssets="runtime"  nothing is copied next to a consumer; the host process supplies
+                                 the real assemblies (GAC inside Tekla, GAC or the resolver in the
+                                 CLI). A copy next to a plugin is a binding hazard, not a fix.
+        PrivateAssets="all"      the produced .nupkg declares NO Tekla dependency at all. Consumers
+                                 always have their own Tekla reference; declaring one here would
+                                 pin them to our floor version. The cost is that a consumer WITHOUT
+                                 a Tekla reference gets a FileNotFoundException rather than a NuGet
+                                 error, which is why the README's first code block says so.
+
+        Version is $(TeklaOpenApiVersion) from Directory.Build.props: 2021.0.0 in Release.
+        Members added after the floor are invoked by reflection at runtime (Interop/OptionalTeklaApi.cs).
+    -->
+    <ItemGroup>
+        <PackageReference Include="Tekla.Structures"          Version="$(TeklaOpenApiVersion)" ExcludeAssets="runtime" PrivateAssets="all" />
+        <PackageReference Include="Tekla.Structures.Model"    Version="$(TeklaOpenApiVersion)" ExcludeAssets="runtime" PrivateAssets="all" />
+        <PackageReference Include="Tekla.Structures.Datatype" Version="$(TeklaOpenApiVersion)" ExcludeAssets="runtime" PrivateAssets="all" />
+    </ItemGroup>
+
+</Project>

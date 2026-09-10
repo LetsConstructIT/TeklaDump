@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!--
+        A COMPILE HARNESS, not a shipped artifact.
+
+        DumpSelection.cs is distributed as SOURCE — Tekla compiles it at run time. Nothing here
+        produces anything anyone installs; the point is that CI fails on a syntax error or a
+        renamed Tekla member in the macro, instead of the macro failing silently on a user's
+        machine (an uncaught exception in a macro produces no message and no log).
+
+        What this harness CANNOT tell you: whether Tekla's own macro compiler accepts the file.
+        That compiler's language level is not documented and differs by version, which is why the
+        macro is written in a deliberately old dialect — no interpolation, no null-conditional, no
+        expression-bodied members, no var-less-obvious constructs — and why the macro must be
+        smoke-tested in a real Tekla before a release. LangVersion is pinned to 5 below so this
+        harness enforces that dialect.
+    -->
+    <PropertyGroup>
+        <RootNamespace>TeklaDump.Macro</RootNamespace>
+        <AssemblyName>TeklaDump.Macro.CompileCheck</AssemblyName>
+        <PlatformTarget>x64</PlatformTarget>
+        <IsPackable>false</IsPackable>
+        <LangVersion>5</LangVersion>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Tekla.Structures"       Version="$(TeklaOpenApiVersion)" ExcludeAssets="runtime" />
+        <PackageReference Include="Tekla.Structures.Model" Version="$(TeklaOpenApiVersion)" ExcludeAssets="runtime" />
+        <!-- Tekla.Technology.Akit.IScript, the macro entry point's parameter type. -->
+        <PackageReference Include="Tekla.Technology.Akit5" Version="*" ExcludeAssets="runtime" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="System.Windows.Forms" />
+    </ItemGroup>
+
+</Project>

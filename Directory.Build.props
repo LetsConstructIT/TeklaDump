@@ -1,0 +1,56 @@
+<Project>
+
+    <PropertyGroup>
+        <TargetFramework>net48</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>false</ImplicitUsings>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+        <!-- Plain PackageReference Version attributes throughout this repo. -->
+        <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+
+        <!--
+            TeklaOpenApiVersion selects the Tekla Open API NuGet package versions (compile-only;
+            see source/TeklaDump/TeklaDump.csproj). Release compiles against the oldest supported
+            floor so ONE shipped binary works on Tekla 2021..2026+: the consumer's process supplies
+            whatever Open API version it is on. An EXACT version, not a wildcard, so the shipped
+            binary is reproducible and the CHANGELOG can state what it was compiled against.
+            Debug compiles against the locally installed version. CI overrides this per matrix leg
+            (-p:TeklaOpenApiVersion=2024.0.4) to catch API drift on every new Tekla release.
+        -->
+        <TeklaOpenApiVersion Condition="'$(Configuration)' == 'Release'">2021.0.0</TeklaOpenApiVersion>
+        <TeklaOpenApiVersion Condition="'$(TeklaOpenApiVersion)' == ''">2026.0.3</TeklaOpenApiVersion>
+
+        <!-- Year part of the above, e.g. 2026 — the form TSAppConfigPatcherTask wants. -->
+        <TeklaOpenApiYear>$(TeklaOpenApiVersion.Substring(0, 4))</TeklaOpenApiYear>
+
+        <!--
+            TeklaVersion is what TSAppConfigPatcherTask reads to patch the CLI's exe.config
+            <codeBase> at the LOCALLY INSTALLED Tekla, for F5 debugging. It is set ONLY in Debug.
+            The patcher reads the Windows REGISTRY — it has no NuGet path — so a non-empty value in
+            Release would demand that exact version be installed on the build machine and would bake
+            a machine-specific path into a downloadable exe. Release binding is GAC + the CLI's own
+            AssemblyResolve fallback instead (see source/TeklaDump.Cli/TeklaAssemblyResolver.cs).
+        -->
+        <TeklaVersion Condition="'$(Configuration)' == 'Debug'">$(TeklaOpenApiYear).0</TeklaVersion>
+
+        <Authors>Grzegorz Olszewski</Authors>
+        <Company>Grzegorz Olszewski</Company>
+        <Product>TeklaDump</Product>
+        <Copyright>Copyright (c) Grzegorz Olszewski</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/grzegorz-olszewski/TeklaDump</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/grzegorz-olszewski/TeklaDump</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+    </PropertyGroup>
+
+    <!-- net48 reference assemblies from NuGet: lets the repo build on a machine (or a CI runner)
+         with no Visual Studio targeting pack installed. -->
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    </ItemGroup>
+
+</Project>

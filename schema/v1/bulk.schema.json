@@ -1,0 +1,1835 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/grzegorz-olszewski/TeklaDump/main/schema/v1/bulk.schema.json",
+  "title": "TeklaDump bulk NDJSON 1.0",
+  "description": "NDJSON, not a JSON document: line 1 validates against $defs/header and every subsequent line against $defs/record. UTF-8 without BOM, \\n line endings. Generated from the extractors' declared keys; do not hand-edit.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/header"
+    },
+    {
+      "$ref": "#/$defs/record"
+    }
+  ],
+  "$defs": {
+    "point": {
+      "type": "object",
+      "description": "A point in the CURRENT work plane of the session the dump was taken in. See the header's workPlane field.",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        },
+        "Chamfer": {
+          "type": "object"
+        }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "description": "A related object, named and never followed. The GUID identifies an object in the SOURCE model; it means nothing in a model the generated code runs against.",
+      "required": [
+        "objectType"
+      ],
+      "properties": {
+        "objectType": {
+          "type": "string"
+        },
+        "guid": {
+          "type": "string"
+        }
+      }
+    },
+    "templateValue": {
+      "description": "A template (report) value. A bare number is in the units the header declares. The object form appears only for an attribute whose unit is known but not normalizable.",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "required": [
+            "value",
+            "unit"
+          ],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "header": {
+      "type": "object",
+      "description": "Self-describing preamble; line 1 of a bulk file.",
+      "required": [
+        "schemaVersion",
+        "domain",
+        "tool",
+        "generatedAt",
+        "unitPolicy",
+        "attributeTier"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string",
+          "enum": [
+            "model"
+          ]
+        },
+        "tool": {
+          "type": "string"
+        },
+        "generatedAt": {
+          "type": "string"
+        },
+        "teklaVersion": {
+          "type": "string"
+        },
+        "buildNumber": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "modelName": {
+          "type": "string"
+        },
+        "modelPath": {
+          "type": "string",
+          "description": "Only when IncludeSessionDetails is on. Off by default: an inspect file is meant to be pasted into a chat."
+        },
+        "user": {
+          "type": "string",
+          "description": "The Tekla user, not the Windows account. Session-details gated."
+        },
+        "currentPhase": {
+          "type": "integer"
+        },
+        "sharedModel": {
+          "type": "boolean"
+        },
+        "workPlane": {
+          "type": "string",
+          "enum": [
+            "global",
+            "custom",
+            "unknown"
+          ]
+        },
+        "workPlaneOrigin": {
+          "$ref": "#/$defs/point"
+        },
+        "workPlaneAxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/point"
+          }
+        },
+        "numberingUpToDate": {
+          "type": "boolean",
+          "description": "False means position and mark attributes are empty or stale. There is no API to run numbering."
+        },
+        "unitPolicy": {
+          "type": "string",
+          "enum": [
+            "normalized",
+            "native"
+          ]
+        },
+        "units": {
+          "type": "object"
+        },
+        "attributeTier": {
+          "type": "string",
+          "enum": [
+            "T0",
+            "T1",
+            "T2"
+          ]
+        },
+        "attributeSet": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "objectCount": {
+          "type": "integer",
+          "description": "Present only when the count was known before writing started."
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "required": [
+        "objectType"
+      ],
+      "properties": {
+        "objectType": {
+          "type": "string",
+          "description": "The CLR simple name of the Tekla type."
+        },
+        "guid": {
+          "type": "string",
+          "description": "Stable identity. Absent for an uninserted object, which has none."
+        },
+        "create": {
+          "type": "object",
+          "description": "Properties that can be assigned when recreating the object. A starting point for code you write, not an importer payload."
+        },
+        "derived": {
+          "type": "object",
+          "description": "Strictly informational. Assigning any of these is either impossible or a mistake."
+        },
+        "userProperties": {
+          "type": "object",
+          "description": "UDAs, sorted by name."
+        },
+        "templateAttributes": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/templateValue"
+          },
+          "description": "Template (report) attributes, verbatim names, sorted."
+        },
+        "componentAttributes": {
+          "type": "object",
+          "description": "Component attributes the user actually SET. An attribute the user never set is omitted, because the component is using its own default."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "ModelObject"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {}
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "Part"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "Profile": {
+                    "type": "string",
+                    "description": "Profile catalog string, e.g. HEA300."
+                  },
+                  "Material": {
+                    "type": "string",
+                    "description": "Material catalog string, e.g. S355J2."
+                  },
+                  "Class": {
+                    "type": "string",
+                    "description": "Class. A string in the API even though it looks like a number."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Part name."
+                  },
+                  "Finish": {
+                    "type": "string",
+                    "description": "Finish, e.g. a paint or galvanising code."
+                  },
+                  "CastUnitType": {
+                    "type": "string",
+                    "description": "PartCastUnitTypeEnum name."
+                  },
+                  "Position": {
+                    "type": "object",
+                    "description": "Depth / Plane / Rotation enum names and their three offsets. The part of a part that is hardest to reproduce from a screenshot."
+                  },
+                  "PartNumber": {
+                    "type": "object",
+                    "description": "Numbering series: Prefix and StartNumber."
+                  },
+                  "AssemblyNumber": {
+                    "type": "object",
+                    "description": "Assembly numbering series: Prefix and StartNumber."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "Assembly": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The assembly this part belongs to."
+                  },
+                  "Solid": {
+                    "type": "object",
+                    "description": "Bounding box of the computed solid. Only when Geometry = Solids — computing it is orders of magnitude more expensive than every other field combined."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "Beam"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint. An opaque string for a human or an LLM to paste — no tool should parse it."
+                  },
+                  "StartPoint": {
+                    "$ref": "#/$defs/point",
+                    "description": "Start of the reference line, in the current work plane."
+                  },
+                  "EndPoint": {
+                    "$ref": "#/$defs/point",
+                    "description": "End of the reference line, in the current work plane."
+                  },
+                  "StartPointOffset": {
+                    "$ref": "#/$defs/point",
+                    "description": "Dx/Dy/Dz offset applied at the start point."
+                  },
+                  "EndPointOffset": {
+                    "$ref": "#/$defs/point",
+                    "description": "Dx/Dy/Dz offset applied at the end point."
+                  },
+                  "Profile": {
+                    "type": "string",
+                    "description": "Profile catalog string, e.g. HEA300."
+                  },
+                  "Material": {
+                    "type": "string",
+                    "description": "Material catalog string, e.g. S355J2."
+                  },
+                  "Class": {
+                    "type": "string",
+                    "description": "Class. A string in the API even though it looks like a number."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Part name."
+                  },
+                  "Finish": {
+                    "type": "string",
+                    "description": "Finish, e.g. a paint or galvanising code."
+                  },
+                  "CastUnitType": {
+                    "type": "string",
+                    "description": "PartCastUnitTypeEnum name."
+                  },
+                  "Position": {
+                    "type": "object",
+                    "description": "Depth / Plane / Rotation enum names and their three offsets. The part of a part that is hardest to reproduce from a screenshot."
+                  },
+                  "PartNumber": {
+                    "type": "object",
+                    "description": "Numbering series: Prefix and StartNumber."
+                  },
+                  "AssemblyNumber": {
+                    "type": "object",
+                    "description": "Assembly numbering series: Prefix and StartNumber."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "Type": {
+                    "type": "string",
+                    "description": "BeamTypeEnum name. DERIVED because it is read-only after construction — it is set by the constructor in $ctor."
+                  },
+                  "Assembly": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The assembly this part belongs to."
+                  },
+                  "Solid": {
+                    "type": "object",
+                    "description": "Bounding box of the computed solid. Only when Geometry = Solids — computing it is orders of magnitude more expensive than every other field combined."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "ContourPlate"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "Contour": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/point"
+                    },
+                    "description": "Contour points in order, each with its Chamfer when it has one."
+                  },
+                  "Profile": {
+                    "type": "string",
+                    "description": "Profile catalog string, e.g. HEA300."
+                  },
+                  "Material": {
+                    "type": "string",
+                    "description": "Material catalog string, e.g. S355J2."
+                  },
+                  "Class": {
+                    "type": "string",
+                    "description": "Class. A string in the API even though it looks like a number."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Part name."
+                  },
+                  "Finish": {
+                    "type": "string",
+                    "description": "Finish, e.g. a paint or galvanising code."
+                  },
+                  "CastUnitType": {
+                    "type": "string",
+                    "description": "PartCastUnitTypeEnum name."
+                  },
+                  "Position": {
+                    "type": "object",
+                    "description": "Depth / Plane / Rotation enum names and their three offsets. The part of a part that is hardest to reproduce from a screenshot."
+                  },
+                  "PartNumber": {
+                    "type": "object",
+                    "description": "Numbering series: Prefix and StartNumber."
+                  },
+                  "AssemblyNumber": {
+                    "type": "object",
+                    "description": "Assembly numbering series: Prefix and StartNumber."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "Type": {
+                    "type": "string",
+                    "description": "ContourPlateTypeEnum name. DERIVED: it is decided by the material (concrete gives a slab, anything else a plate), not assigned."
+                  },
+                  "Assembly": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The assembly this part belongs to."
+                  },
+                  "Solid": {
+                    "type": "object",
+                    "description": "Bounding box of the computed solid. Only when Geometry = Solids — computing it is orders of magnitude more expensive than every other field combined."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "PolyBeam"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "Contour": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/point"
+                    },
+                    "description": "Centre-line contour points in order. A chamfer here is a bend, not a corner cut."
+                  },
+                  "Profile": {
+                    "type": "string",
+                    "description": "Profile catalog string, e.g. HEA300."
+                  },
+                  "Material": {
+                    "type": "string",
+                    "description": "Material catalog string, e.g. S355J2."
+                  },
+                  "Class": {
+                    "type": "string",
+                    "description": "Class. A string in the API even though it looks like a number."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Part name."
+                  },
+                  "Finish": {
+                    "type": "string",
+                    "description": "Finish, e.g. a paint or galvanising code."
+                  },
+                  "CastUnitType": {
+                    "type": "string",
+                    "description": "PartCastUnitTypeEnum name."
+                  },
+                  "Position": {
+                    "type": "object",
+                    "description": "Depth / Plane / Rotation enum names and their three offsets. The part of a part that is hardest to reproduce from a screenshot."
+                  },
+                  "PartNumber": {
+                    "type": "object",
+                    "description": "Numbering series: Prefix and StartNumber."
+                  },
+                  "AssemblyNumber": {
+                    "type": "object",
+                    "description": "Assembly numbering series: Prefix and StartNumber."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "Type": {
+                    "type": "string",
+                    "description": "BeamTypeEnum name; read-only after construction."
+                  },
+                  "Assembly": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The assembly this part belongs to."
+                  },
+                  "Solid": {
+                    "type": "object",
+                    "description": "Bounding box of the computed solid. Only when Geometry = Solids — computing it is orders of magnitude more expensive than every other field combined."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "BoltGroup"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "PartToBeBolted": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The part the group is bolted to first."
+                  },
+                  "PartToBoltTo": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The part being bolted onto."
+                  },
+                  "OtherPartsToBolt": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/reference"
+                    },
+                    "description": "Any further parts in the grip."
+                  },
+                  "FirstPosition": {
+                    "$ref": "#/$defs/point",
+                    "description": "First positioning point of the group."
+                  },
+                  "SecondPosition": {
+                    "$ref": "#/$defs/point",
+                    "description": "Second positioning point; with the first it sets the group's direction."
+                  },
+                  "BoltPositions": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/point"
+                    },
+                    "description": "Positions of the individual bolts within the group."
+                  },
+                  "BoltSize": {
+                    "type": "number",
+                    "description": "Nominal bolt size."
+                  },
+                  "BoltStandard": {
+                    "type": "string",
+                    "description": "Bolt assembly catalog name, e.g. 8.8X."
+                  },
+                  "BoltType": {
+                    "type": "string",
+                    "description": "BoltTypeEnum name: site or workshop."
+                  },
+                  "Length": {
+                    "type": "number",
+                    "description": "Bolt length."
+                  },
+                  "ExtraLength": {
+                    "type": "number",
+                    "description": "Extra length added past the grip."
+                  },
+                  "CutLength": {
+                    "type": "number",
+                    "description": "Cut length."
+                  },
+                  "Position": {
+                    "type": "object",
+                    "description": "Depth / Plane / Rotation and their offsets, as on a part."
+                  },
+                  "ConnectAssemblies": {
+                    "type": "boolean",
+                    "description": "Whether the group connects the parts into one assembly."
+                  },
+                  "Tolerance": {
+                    "type": "number",
+                    "description": "Hole tolerance."
+                  },
+                  "HoleType": {
+                    "type": "string",
+                    "description": "BoltHoleTypeEnum name."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "BaseWeld"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "MainObject": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The object welded to."
+                  },
+                  "SecondaryObject": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The object being welded."
+                  },
+                  "ShopWeld": {
+                    "type": "boolean",
+                    "description": "True for a workshop weld, false for a site weld."
+                  },
+                  "ConnectAssemblies": {
+                    "type": "boolean",
+                    "description": "Whether the weld joins the parts into one assembly."
+                  },
+                  "AroundWeld": {
+                    "type": "boolean",
+                    "description": "Weld-all-around flag."
+                  },
+                  "TypeAbove": {
+                    "type": "string",
+                    "description": "WeldTypeEnum name, above the line."
+                  },
+                  "TypeBelow": {
+                    "type": "string",
+                    "description": "WeldTypeEnum name, below the line."
+                  },
+                  "SizeAbove": {
+                    "type": "number",
+                    "description": "Weld size above the line."
+                  },
+                  "SizeBelow": {
+                    "type": "number",
+                    "description": "Weld size below the line."
+                  },
+                  "LengthAbove": {
+                    "type": "number",
+                    "description": "Weld length above the line."
+                  },
+                  "LengthBelow": {
+                    "type": "number",
+                    "description": "Weld length below the line."
+                  },
+                  "PitchAbove": {
+                    "type": "number",
+                    "description": "Pitch above the line, for an intermittent weld."
+                  },
+                  "PitchBelow": {
+                    "type": "number",
+                    "description": "Pitch below the line."
+                  },
+                  "AngleAbove": {
+                    "type": "number",
+                    "description": "Preparation angle above the line."
+                  },
+                  "AngleBelow": {
+                    "type": "number",
+                    "description": "Preparation angle below the line."
+                  },
+                  "ContourAbove": {
+                    "type": "string",
+                    "description": "WeldContourEnum name, above the line."
+                  },
+                  "ContourBelow": {
+                    "type": "string",
+                    "description": "WeldContourEnum name, below the line."
+                  },
+                  "FinishAbove": {
+                    "type": "string",
+                    "description": "WeldFinishEnum name, above the line."
+                  },
+                  "FinishBelow": {
+                    "type": "string",
+                    "description": "WeldFinishEnum name, below the line."
+                  },
+                  "IntermittentType": {
+                    "type": "string",
+                    "description": "WeldIntermittentTypeEnum name."
+                  },
+                  "Placement": {
+                    "type": "string",
+                    "description": "WeldPlacementTypeEnum name."
+                  },
+                  "Preparation": {
+                    "type": "string",
+                    "description": "WeldPreparationTypeEnum name."
+                  },
+                  "ReferenceText": {
+                    "type": "string",
+                    "description": "Free text shown on the weld symbol."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "WeldNumber": {
+                    "type": "integer",
+                    "description": "Assigned by numbering; empty until numbering has run."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "PolygonWeld"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "Polygon": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/point"
+                    },
+                    "description": "The polyline the weld follows."
+                  },
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "MainObject": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The object welded to."
+                  },
+                  "SecondaryObject": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The object being welded."
+                  },
+                  "ShopWeld": {
+                    "type": "boolean",
+                    "description": "True for a workshop weld, false for a site weld."
+                  },
+                  "ConnectAssemblies": {
+                    "type": "boolean",
+                    "description": "Whether the weld joins the parts into one assembly."
+                  },
+                  "AroundWeld": {
+                    "type": "boolean",
+                    "description": "Weld-all-around flag."
+                  },
+                  "TypeAbove": {
+                    "type": "string",
+                    "description": "WeldTypeEnum name, above the line."
+                  },
+                  "TypeBelow": {
+                    "type": "string",
+                    "description": "WeldTypeEnum name, below the line."
+                  },
+                  "SizeAbove": {
+                    "type": "number",
+                    "description": "Weld size above the line."
+                  },
+                  "SizeBelow": {
+                    "type": "number",
+                    "description": "Weld size below the line."
+                  },
+                  "LengthAbove": {
+                    "type": "number",
+                    "description": "Weld length above the line."
+                  },
+                  "LengthBelow": {
+                    "type": "number",
+                    "description": "Weld length below the line."
+                  },
+                  "PitchAbove": {
+                    "type": "number",
+                    "description": "Pitch above the line, for an intermittent weld."
+                  },
+                  "PitchBelow": {
+                    "type": "number",
+                    "description": "Pitch below the line."
+                  },
+                  "AngleAbove": {
+                    "type": "number",
+                    "description": "Preparation angle above the line."
+                  },
+                  "AngleBelow": {
+                    "type": "number",
+                    "description": "Preparation angle below the line."
+                  },
+                  "ContourAbove": {
+                    "type": "string",
+                    "description": "WeldContourEnum name, above the line."
+                  },
+                  "ContourBelow": {
+                    "type": "string",
+                    "description": "WeldContourEnum name, below the line."
+                  },
+                  "FinishAbove": {
+                    "type": "string",
+                    "description": "WeldFinishEnum name, above the line."
+                  },
+                  "FinishBelow": {
+                    "type": "string",
+                    "description": "WeldFinishEnum name, below the line."
+                  },
+                  "IntermittentType": {
+                    "type": "string",
+                    "description": "WeldIntermittentTypeEnum name."
+                  },
+                  "Placement": {
+                    "type": "string",
+                    "description": "WeldPlacementTypeEnum name."
+                  },
+                  "Preparation": {
+                    "type": "string",
+                    "description": "WeldPreparationTypeEnum name."
+                  },
+                  "ReferenceText": {
+                    "type": "string",
+                    "description": "Free text shown on the weld symbol."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "WeldNumber": {
+                    "type": "integer",
+                    "description": "Assigned by numbering; empty until numbering has run."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "RebarGroup"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "StartPoint": {
+                    "$ref": "#/$defs/point",
+                    "description": "Start of the distribution line."
+                  },
+                  "EndPoint": {
+                    "$ref": "#/$defs/point",
+                    "description": "End of the distribution line."
+                  },
+                  "Polygons": {
+                    "type": "array",
+                    "description": "The bar shapes, each an array of points."
+                  },
+                  "Size": {
+                    "type": "string",
+                    "description": "Bar size, a catalog string such as 12."
+                  },
+                  "Spacings": {
+                    "type": "array",
+                    "description": "Spacing values; one value means an even spacing."
+                  },
+                  "SpacingType": {
+                    "type": "string",
+                    "description": "RebarGroupSpacingTypeEnum name."
+                  },
+                  "ExcludeType": {
+                    "type": "string",
+                    "description": "ExcludeTypeEnum name: which end bars are left out."
+                  },
+                  "StirrupType": {
+                    "type": "string",
+                    "description": "StirrupTypeEnum name."
+                  },
+                  "StartHook": {
+                    "type": "object",
+                    "description": "Shape, Angle, Radius, Length."
+                  },
+                  "EndHook": {
+                    "type": "object",
+                    "description": "Shape, Angle, Radius, Length."
+                  },
+                  "StartFromPlaneOffset": {
+                    "type": "number",
+                    "description": "Plane offset at the start of the group."
+                  },
+                  "EndFromPlaneOffset": {
+                    "type": "number",
+                    "description": "Plane offset at the end of the group."
+                  },
+                  "Father": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The part or pour the reinforcement is placed in. Required to insert."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Reinforcement name."
+                  },
+                  "Grade": {
+                    "type": "string",
+                    "description": "Steel grade, e.g. B500B."
+                  },
+                  "Class": {
+                    "type": "integer",
+                    "description": "Class. An int here, unlike a part's string Class."
+                  },
+                  "NumberingSeries": {
+                    "type": "object",
+                    "description": "Numbering series: Prefix and StartNumber."
+                  },
+                  "FromPlaneOffset": {
+                    "type": "number",
+                    "description": "Offset from the placing plane."
+                  },
+                  "StartPointOffsetType": {
+                    "type": "string",
+                    "description": "RebarOffsetTypeEnum name."
+                  },
+                  "StartPointOffsetValue": {
+                    "type": "number",
+                    "description": "Offset applied at the start point."
+                  },
+                  "EndPointOffsetType": {
+                    "type": "string",
+                    "description": "RebarOffsetTypeEnum name."
+                  },
+                  "EndPointOffsetValue": {
+                    "type": "number",
+                    "description": "Offset applied at the end point."
+                  },
+                  "OnPlaneOffsets": {
+                    "type": "array",
+                    "description": "Offsets in the placing plane, one per leg."
+                  },
+                  "RadiusValues": {
+                    "type": "array",
+                    "description": "Bending radii, one per bend."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "NumberOfRebars": {
+                    "type": "integer",
+                    "description": "How many bars the group actually produced."
+                  },
+                  "Assembly": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The rebar assembly, on Tekla 2022 and newer. Present on Tekla 2022 and newer."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "SingleRebar"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "Polygon": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/point"
+                    },
+                    "description": "The bar's shape, point by point."
+                  },
+                  "Size": {
+                    "type": "string",
+                    "description": "Bar size."
+                  },
+                  "StartHook": {
+                    "type": "object",
+                    "description": "Shape, Angle, Radius, Length."
+                  },
+                  "EndHook": {
+                    "type": "object",
+                    "description": "Shape, Angle, Radius, Length."
+                  },
+                  "Father": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The part or pour the reinforcement is placed in. Required to insert."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Reinforcement name."
+                  },
+                  "Grade": {
+                    "type": "string",
+                    "description": "Steel grade, e.g. B500B."
+                  },
+                  "Class": {
+                    "type": "integer",
+                    "description": "Class. An int here, unlike a part's string Class."
+                  },
+                  "NumberingSeries": {
+                    "type": "object",
+                    "description": "Numbering series: Prefix and StartNumber."
+                  },
+                  "FromPlaneOffset": {
+                    "type": "number",
+                    "description": "Offset from the placing plane."
+                  },
+                  "StartPointOffsetType": {
+                    "type": "string",
+                    "description": "RebarOffsetTypeEnum name."
+                  },
+                  "StartPointOffsetValue": {
+                    "type": "number",
+                    "description": "Offset applied at the start point."
+                  },
+                  "EndPointOffsetType": {
+                    "type": "string",
+                    "description": "RebarOffsetTypeEnum name."
+                  },
+                  "EndPointOffsetValue": {
+                    "type": "number",
+                    "description": "Offset applied at the end point."
+                  },
+                  "OnPlaneOffsets": {
+                    "type": "array",
+                    "description": "Offsets in the placing plane, one per leg."
+                  },
+                  "RadiusValues": {
+                    "type": "array",
+                    "description": "Bending radii, one per bend."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "NumberOfRebars": {
+                    "type": "integer",
+                    "description": "How many bars the group actually produced."
+                  },
+                  "Assembly": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The rebar assembly, on Tekla 2022 and newer. Present on Tekla 2022 and newer."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "RebarMesh"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "CatalogName": {
+                    "type": "string",
+                    "description": "Mesh catalog name. With it, most of the geometry below is implied."
+                  },
+                  "Polygon": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/point"
+                    },
+                    "description": "The sheet's outline."
+                  },
+                  "StartPoint": {
+                    "$ref": "#/$defs/point",
+                    "description": "Start of the placing line."
+                  },
+                  "EndPoint": {
+                    "$ref": "#/$defs/point",
+                    "description": "End of the placing line."
+                  },
+                  "MeshType": {
+                    "type": "string",
+                    "description": "MeshTypeEnum name."
+                  },
+                  "Length": {
+                    "type": "number",
+                    "description": "Sheet length."
+                  },
+                  "Width": {
+                    "type": "number",
+                    "description": "Sheet width."
+                  },
+                  "LongitudinalSize": {
+                    "type": "string",
+                    "description": "Longitudinal bar size."
+                  },
+                  "CrossSize": {
+                    "type": "string",
+                    "description": "Cross bar size."
+                  },
+                  "StartFromPlaneOffset": {
+                    "type": "number",
+                    "description": "Plane offset at the start."
+                  },
+                  "EndFromPlaneOffset": {
+                    "type": "number",
+                    "description": "Plane offset at the end."
+                  },
+                  "Father": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The part or pour the reinforcement is placed in. Required to insert."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Reinforcement name."
+                  },
+                  "Grade": {
+                    "type": "string",
+                    "description": "Steel grade, e.g. B500B."
+                  },
+                  "Class": {
+                    "type": "integer",
+                    "description": "Class. An int here, unlike a part's string Class."
+                  },
+                  "NumberingSeries": {
+                    "type": "object",
+                    "description": "Numbering series: Prefix and StartNumber."
+                  },
+                  "FromPlaneOffset": {
+                    "type": "number",
+                    "description": "Offset from the placing plane."
+                  },
+                  "StartPointOffsetType": {
+                    "type": "string",
+                    "description": "RebarOffsetTypeEnum name."
+                  },
+                  "StartPointOffsetValue": {
+                    "type": "number",
+                    "description": "Offset applied at the start point."
+                  },
+                  "EndPointOffsetType": {
+                    "type": "string",
+                    "description": "RebarOffsetTypeEnum name."
+                  },
+                  "EndPointOffsetValue": {
+                    "type": "number",
+                    "description": "Offset applied at the end point."
+                  },
+                  "OnPlaneOffsets": {
+                    "type": "array",
+                    "description": "Offsets in the placing plane, one per leg."
+                  },
+                  "RadiusValues": {
+                    "type": "array",
+                    "description": "Bending radii, one per bend."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "NumberOfRebars": {
+                    "type": "integer",
+                    "description": "How many bars the group actually produced."
+                  },
+                  "Assembly": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The rebar assembly, on Tekla 2022 and newer. Present on Tekla 2022 and newer."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "BaseComponent"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "Number": {
+                    "type": "integer",
+                    "description": "System component number, e.g. 141. -100000 (PLUGIN_OBJECT_NUMBER) means a plugin, identified by Name instead."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Component or plugin name."
+                  },
+                  "Input": {
+                    "type": "array",
+                    "description": "Resolved component input: one entry per input item, each with its inputType and either objects (references) or points."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "Connection"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "PrimaryObject": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The part the connection was applied to first."
+                  },
+                  "SecondaryObjects": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/reference"
+                    },
+                    "description": "The parts connected to the primary."
+                  },
+                  "UpVector": {
+                    "$ref": "#/$defs/point",
+                    "description": "Up direction, which decides the connection's orientation."
+                  },
+                  "PositionType": {
+                    "type": "string",
+                    "description": "PositionTypeEnum name."
+                  },
+                  "AutoDirectionType": {
+                    "type": "string",
+                    "description": "AutoDirectionTypeEnum name."
+                  },
+                  "Class": {
+                    "type": "integer",
+                    "description": "Connection class."
+                  },
+                  "Code": {
+                    "type": "string",
+                    "description": "Connection code."
+                  },
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "Number": {
+                    "type": "integer",
+                    "description": "System component number, e.g. 141. -100000 (PLUGIN_OBJECT_NUMBER) means a plugin, identified by Name instead."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Component or plugin name."
+                  },
+                  "Input": {
+                    "type": "array",
+                    "description": "Resolved component input: one entry per input item, each with its inputType and either objects (references) or points."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "Status": {
+                    "type": "string",
+                    "description": "StatusEnum name: whether the connection last built cleanly. Derived — it is Tekla's verdict, not an input."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "Detail"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "PrimaryObject": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The part the detail was applied to."
+                  },
+                  "ReferencePoint": {
+                    "$ref": "#/$defs/point",
+                    "description": "Where on the part the detail sits."
+                  },
+                  "DetailType": {
+                    "type": "string",
+                    "description": "DetailTypeEnum name: which end or side."
+                  },
+                  "UpVector": {
+                    "$ref": "#/$defs/point",
+                    "description": "Up direction."
+                  },
+                  "PositionType": {
+                    "type": "string",
+                    "description": "PositionTypeEnum name."
+                  },
+                  "AutoDirectionType": {
+                    "type": "string",
+                    "description": "AutoDirectionTypeEnum name."
+                  },
+                  "Class": {
+                    "type": "integer",
+                    "description": "Detail class."
+                  },
+                  "Code": {
+                    "type": "string",
+                    "description": "Detail code."
+                  },
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "Number": {
+                    "type": "integer",
+                    "description": "System component number, e.g. 141. -100000 (PLUGIN_OBJECT_NUMBER) means a plugin, identified by Name instead."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Component or plugin name."
+                  },
+                  "Input": {
+                    "type": "array",
+                    "description": "Resolved component input: one entry per input item, each with its inputType and either objects (references) or points."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "Status": {
+                    "type": "string",
+                    "description": "StatusEnum name; Tekla's verdict on the last build."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "Seam"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "PrimaryObject": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The part the seam was applied to first."
+                  },
+                  "SecondaryObjects": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/reference"
+                    },
+                    "description": "The parts seamed to the primary."
+                  },
+                  "StartPosition": {
+                    "$ref": "#/$defs/point",
+                    "description": "Start of the seam line."
+                  },
+                  "EndPosition": {
+                    "$ref": "#/$defs/point",
+                    "description": "End of the seam line."
+                  },
+                  "InputPolygon": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/point"
+                    },
+                    "description": "The polygon input, for a polygon seam."
+                  },
+                  "UpVector": {
+                    "$ref": "#/$defs/point",
+                    "description": "Up direction."
+                  },
+                  "AutoPosition": {
+                    "type": "boolean",
+                    "description": "Whether Tekla positions the seam itself."
+                  },
+                  "AutoDirectionType": {
+                    "type": "string",
+                    "description": "AutoDirectionTypeEnum name."
+                  },
+                  "Class": {
+                    "type": "integer",
+                    "description": "Seam class."
+                  },
+                  "Code": {
+                    "type": "string",
+                    "description": "Seam code."
+                  },
+                  "$ctor": {
+                    "type": "string",
+                    "description": "Constructor hint; an opaque string."
+                  },
+                  "Number": {
+                    "type": "integer",
+                    "description": "System component number, e.g. 141. -100000 (PLUGIN_OBJECT_NUMBER) means a plugin, identified by Name instead."
+                  },
+                  "Name": {
+                    "type": "string",
+                    "description": "Component or plugin name."
+                  },
+                  "Input": {
+                    "type": "array",
+                    "description": "Resolved component input: one entry per input item, each with its inputType and either objects (references) or points."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "Status": {
+                    "type": "string",
+                    "description": "StatusEnum name; Tekla's verdict on the last build."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objectType": {
+                "type": "string",
+                "enum": [
+                  "Assembly"
+                ]
+              }
+            },
+            "required": [
+              "objectType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "create": {
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string",
+                    "description": "Assembly name."
+                  },
+                  "AssemblyNumber": {
+                    "type": "object",
+                    "description": "Numbering series: Prefix and StartNumber."
+                  }
+                }
+              },
+              "derived": {
+                "type": "object",
+                "properties": {
+                  "MainPart": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The part the assembly is named after."
+                  },
+                  "Secondaries": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/reference"
+                    },
+                    "description": "Parts welded or bolted to the main part."
+                  },
+                  "SubAssemblies": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/reference"
+                    },
+                    "description": "Nested assemblies."
+                  },
+                  "Phase": {
+                    "type": "integer",
+                    "description": "Phase number the object belongs to."
+                  },
+                  "FatherComponent": {
+                    "$ref": "#/$defs/reference",
+                    "description": "The component that created this object, when one did. Its presence is the warning that editing this object by hand will be undone the next time the component regenerates."
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

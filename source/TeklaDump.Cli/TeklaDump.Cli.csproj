@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>TeklaDump.Cli</RootNamespace>
+        <AssemblyName>tekla-dump</AssemblyName>
+        <!-- Tekla is 64-bit. Anything that runs against a session is x64. -->
+        <PlatformTarget>x64</PlatformTarget>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <!--
+        Compile-only, exactly like the library: the exe binds to whatever Open API the machine has.
+        Three layers make that work for a downloaded binary (see TeklaAssemblyResolver.cs):
+          1. the GAC, where a Tekla install puts its Open API assemblies;
+          2. an AssemblyResolve fallback that loads from the running TeklaStructures.exe's bin folder;
+          3. the "tekla-bin" option when both fail.
+    -->
+    <ItemGroup>
+        <PackageReference Include="Tekla.Structures"          Version="$(TeklaOpenApiVersion)" ExcludeAssets="runtime" />
+        <PackageReference Include="Tekla.Structures.Model"    Version="$(TeklaOpenApiVersion)" ExcludeAssets="runtime" />
+        <PackageReference Include="Tekla.Structures.Datatype" Version="$(TeklaOpenApiVersion)" ExcludeAssets="runtime" />
+    </ItemGroup>
+
+    <!--
+        ExcludeAssets="runtime" also strips the transitive System.Memory from this exe's output, and
+        the exe then dies on first connect with "Could not load file or assembly 'System.Memory,
+        Version=4.0.1.2'". So it is referenced directly, which puts the DLL back next to the exe.
+
+        The version is 4.6.3, not the 4.5.5 commonly cited for this pairing: BOTH
+        Tekla.Structures 2021.0.0 and 2026.0.3 declare a dependency on System.Memory >= 4.6.3
+        (checked 9 Sep 2026 against the packages on nuget.org), so pinning 4.5.5 underneath them is
+        a package DOWNGRADE and NuGet fails the build with NU1605 on every matrix leg, floor
+        included.
+
+        That changes the assembly version from 4.0.1.2 (package 4.5.5) to 4.0.2.0 (package 4.6.x),
+        which is exactly the number the old failure message asks for — hence the binding redirect
+        below. Without it, shipping 4.6.3 swaps one FileNotFoundException for another.
+    -->
+    <PropertyGroup>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Memory" Version="4.6.3" />
+    </ItemGroup>
+
+    <!--
+        DEBUG ONLY. TSAppConfigPatcherTask reads the Windows registry for an installed Tekla and
+        bakes that path into tekla-dump.exe.config so F5 works. TeklaVersion is empty in Release
+        (Directory.Build.props), so the patcher is skipped and the released exe.config carries no
+        machine-specific path — a downloaded exe must not point at the build machine's install.
+    -->
+    <ItemGroup Condition="'$(TeklaVersion)' != ''">
+        <PackageReference Include="TSAppConfigPatcherTask" Version="*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\TeklaDump\TeklaDump.csproj" />
+    </ItemGroup>
+
+</Project>

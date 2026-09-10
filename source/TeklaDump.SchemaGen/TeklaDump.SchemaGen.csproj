@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>TeklaDump.SchemaGen</RootNamespace>
+        <AssemblyName>TeklaDump.SchemaGen</AssemblyName>
+        <PlatformTarget>x64</PlatformTarget>
+        <IsPackable>false</IsPackable>
+        <!-- See Directory.Build.targets: this exe takes the Tekla packages with their runtime
+             assets, so System.Memory arrives transitively and must not be pinned under it. -->
+        <SkipSystemMemoryInjection>true</SkipSystemMemoryInjection>
+    </PropertyGroup>
+
+    <!--
+        Tekla packages WITH runtime assets, unlike everywhere else in the repo.
+
+        The generator reads each extractor's ObjectType, which means loading types like Beam and
+        BoltGroup — so the real assemblies have to be present at run time. It never connects to a
+        model and never needs Tekla installed: the assemblies come from NuGet, which is what lets
+        `Generate-Schema.ps1` run on a CI machine that has never seen Tekla.
+    -->
+    <ItemGroup>
+        <PackageReference Include="Tekla.Structures"          Version="$(TeklaOpenApiVersion)" />
+        <PackageReference Include="Tekla.Structures.Model"    Version="$(TeklaOpenApiVersion)" />
+        <PackageReference Include="Tekla.Structures.Datatype" Version="$(TeklaOpenApiVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\TeklaDump\TeklaDump.csproj" />
+    </ItemGroup>
+
+</Project>

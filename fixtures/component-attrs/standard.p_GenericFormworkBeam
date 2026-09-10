@@ -1,0 +1,16 @@
+GenericFormworkBeam_attributes.saveas_file "standard"
+GenericFormworkBeam_attributes.get_menu "standard"
+GenericFormworkBeam_attributes.name_enable 0
+GenericFormworkBeam_attributes.ThirdHandle 0
+GenericFormworkBeam_attributes.AtDepthValue -0.000000
+GenericFormworkBeam_attributes.AtDepth 0
+GenericFormworkBeam_attributes.RotationValue -0.000000
+GenericFormworkBeam_attributes.Rotation 1
+GenericFormworkBeam_attributes.OnPlaneValue 0.000000
+GenericFormworkBeam_attributes.OnPlane 0
+GenericFormworkBeam_attributes.HandleOption 0
+GenericFormworkBeam_attributes.BeamClass 7
+GenericFormworkBeam_attributes.BeamName "FORM_PANEL"
+GenericFormworkBeam_attributes.BeamHeight 300.000000
+GenericFormworkBeam_attributes.BeamWidth 100.000000
+GenericFormworkBeam_attributes.BeamLength 1600.000000

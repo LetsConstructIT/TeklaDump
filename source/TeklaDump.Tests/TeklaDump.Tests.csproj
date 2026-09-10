@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!-- xUnit v3 runs as its own executable under Microsoft.Testing.Platform, which is the
+             runner global.json selects for this repo. -->
+        <OutputType>Exe</OutputType>
+        <RootNamespace>TeklaDump.Tests</RootNamespace>
+        <AssemblyName>TeklaDump.Tests</AssemblyName>
+        <PlatformTarget>x64</PlatformTarget>
+        <IsPackable>false</IsPackable>
+        <!-- See Directory.Build.targets: the Tekla packages come in with runtime assets here, so
+             System.Memory arrives transitively and must not be pinned under it. -->
+        <SkipSystemMemoryInjection>true</SkipSystemMemoryInjection>
+    </PropertyGroup>
+
+    <!--
+        Pinned to a major version on purpose. xunit.v3 carries Microsoft.Testing.Platform with it,
+        and the SDK's `dotnet test` orchestrator speaks a versioned handshake to it: a too-old MTP
+        makes the run die with "The given key '8' was not present in the dictionary" rather than
+        anything that names the real problem. Microsoft.NET.Test.Sdk is deliberately absent — it is
+        the VSTest entry point, and MTP replaces it.
+    -->
+    <ItemGroup>
+        <PackageReference Include="xunit.v3" Version="4.*" />
+    </ItemGroup>
+
+    <!--
+        Tekla Open API WITH runtime assets — the one place in the repo that does this.
+
+        The library references them compile-only, so nothing lands next to a consumer. The tests
+        need the real assemblies present to do `new Beam()`, `typeof(BoltGroup)` and the registry's
+        hierarchy walk. NuGet supplies them, so this whole suite runs on a CI machine with no Tekla
+        installed. Anything that talks to the model DATABASE is golden-file territory and is not
+        here — see fixtures/golden/README.md.
+    -->
+    <ItemGroup>
+        <PackageReference Include="Tekla.Structures"          Version="$(TeklaOpenApiVersion)" />
+        <PackageReference Include="Tekla.Structures.Model"    Version="$(TeklaOpenApiVersion)" />
+        <PackageReference Include="Tekla.Structures.Datatype" Version="$(TeklaOpenApiVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\TeklaDump\TeklaDump.csproj" />
+        <ProjectReference Include="..\TeklaDump.SchemaGen\TeklaDump.SchemaGen.csproj" />
+    </ItemGroup>
+
+</Project>
