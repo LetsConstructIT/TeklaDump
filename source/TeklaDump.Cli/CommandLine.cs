@@ -32,6 +32,7 @@ internal sealed class CommandLine
     public bool Quiet { get; private set; }
     public bool Progress { get; private set; }
     public bool Help { get; private set; }
+    public bool Version { get; private set; }
 
     /// <summary>For <c>attrs</c>: which content type to list.</summary>
     public string? For { get; private set; }
@@ -67,6 +68,7 @@ internal sealed class CommandLine
             {
                 case "-h":
                 case "--help": result.Help = true; break;
+                case "--version": result.Version = true; break;
                 case "--selected": result.Selected = true; break;
                 case "--all": result.All = true; break;
                 case "--no-derived": result.NoDerived = true; break;
@@ -240,6 +242,7 @@ OPTIONS
   --quiet                      No progress or notices on stderr.
   --progress                   Report progress on stderr during a bulk run.
   -h, --help                   This text.
+  --version                    This exe, the TeklaDump.dll beside it, and the schema.
 
 EXIT CODES
   0  ok

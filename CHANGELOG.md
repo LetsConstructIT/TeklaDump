@@ -27,7 +27,10 @@ schema movement gets its own `### Schema` subsection.
   `<setname>.j<Number>` / `<setname>.<PluginName>` for component attributes. Nothing is baked in.
 - `tekla-dump.exe` with `inspect`, `bulk`, `attrs` and `doctor`, documented exit codes, work-plane
   normalization, and a three-layer Open API binding story (GAC, running-process fallback,
-  `--tekla-bin`).
+  `--tekla-bin`). `--version` prints three lines — the exe's build, the `TeklaDump.dll` it actually
+  loaded and where from, and the schema version read out of that DLL's own metadata. The exe and
+  the DLL ship in two separate downloads (the CLI zip and the macro bundle), so a mismatched pair
+  in one folder is a real failure mode, and it is the first thing an issue report rules out.
 - The macro bundle: `DumpSelection.cs` + `DumpSelection.png`, reflection-loading `TeklaDump.dll`,
   plus a `LangVersion 5` compile harness so CI catches what Tekla's macro compiler would fail on
   silently. The macro carries its own reference list via `#pragma reference` (`Akit5`,
