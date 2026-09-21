@@ -65,8 +65,14 @@ JsonValue document = DumpWriter.Inspect(objects, options);
 DumpResult result = DumpWriter.Bulk(objects, outputStream, options);
 ```
 
-That is the entire v1 surface, plus `DumpOptions`, `DumpResult` and `JsonValue`. Everything else is
-internal.
+That is the entire v1 surface. Fourteen public types in total: the two entry points, `DumpOptions`
+and its five option enums, `DumpResult` with `DumpWarning` and `DumpProgress`, `JsonValue` with
+`JsonObject` and `JsonArray`, and `SchemaVersion`. Everything else — the extractor contract, the
+sinks, the dump context, the session reader, the attribute catalogs — is `internal`, and stays that
+way: opening a type later is a non-breaking change, closing one is not.
+
+The exact surface is committed in [`source/TeklaDump/PublicSurface.txt`](source/TeklaDump/PublicSurface.txt)
+and a test fails if the assembly stops matching it.
 
 ### CLI
 

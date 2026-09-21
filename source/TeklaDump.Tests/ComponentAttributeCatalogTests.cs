@@ -72,14 +72,15 @@ public class ComponentAttributeCatalogTests
         Assert.Equal(expected, ComponentAttributeCatalog.StripPrefix(token));
     }
 
+    // ComponentValueType is internal, so the expectation travels as nameof() — see UnitsTests.
     [Theory]
-    [InlineData("0", ComponentValueType.Integer)]
-    [InlineData("-2147483648", ComponentValueType.Integer)]
-    [InlineData("0.000000", ComponentValueType.Double)]
-    [InlineData("\"standard\"", ComponentValueType.String)]
-    [InlineData("", ComponentValueType.String)]
-    public void Classifies_saved_literals(string literal, ComponentValueType expected)
+    [InlineData("0", nameof(ComponentValueType.Integer))]
+    [InlineData("-2147483648", nameof(ComponentValueType.Integer))]
+    [InlineData("0.000000", nameof(ComponentValueType.Double))]
+    [InlineData("\"standard\"", nameof(ComponentValueType.String))]
+    [InlineData("", nameof(ComponentValueType.String))]
+    public void Classifies_saved_literals(string literal, string expected)
     {
-        Assert.Equal(expected, ComponentAttributeCatalog.GuessType(literal));
+        Assert.Equal(expected, ComponentAttributeCatalog.GuessType(literal).ToString());
     }
 }

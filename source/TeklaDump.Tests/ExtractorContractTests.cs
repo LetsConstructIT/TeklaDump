@@ -21,13 +21,21 @@ namespace TeklaDump.Tests;
 /// </remarks>
 public class ExtractorContractTests
 {
+    // IObjectExtractor is internal — the extractor contract is not published API — so the theory
+    // travels by the extractor's ObjectType and resolves it here. It also gives each case a test
+    // name that reads as the Tekla type under contract.
     public static IEnumerable<object[]> AllExtractors() =>
-        ExtractorRegistry.DefaultExtractors().Select(extractor => new object[] { extractor });
+        ExtractorRegistry.DefaultExtractors().Select(extractor => new object[] { extractor.ObjectType });
+
+    private static IObjectExtractor ExtractorFor(Type objectType) =>
+        ExtractorRegistry.DefaultExtractors().Single(extractor => extractor.ObjectType == objectType);
 
     [Theory]
     [MemberData(nameof(AllExtractors))]
-    public void A_key_is_settable_or_derived_but_never_both(IObjectExtractor extractor)
+    public void A_key_is_settable_or_derived_but_never_both(Type objectType)
     {
+        var extractor = ExtractorFor(objectType);
+
         // This assertion IS the anti-round-trip-trap mechanism. A key in both blocks would mean the
         // document says "you can assign this" and "this is read-only" about the same property.
         var overlap = extractor.CreateKeys.Intersect(extractor.DerivedKeys, StringComparer.Ordinal).ToList();
@@ -39,8 +47,10 @@ public class ExtractorContractTests
 
     [Theory]
     [MemberData(nameof(AllExtractors))]
-    public void Declares_each_key_once(IObjectExtractor extractor)
+    public void Declares_each_key_once(Type objectType)
     {
+        var extractor = ExtractorFor(objectType);
+
         Assert.Equal(extractor.CreateKeys.Count, extractor.CreateKeys.Distinct(StringComparer.Ordinal).Count());
         Assert.Equal(extractor.DerivedKeys.Count, extractor.DerivedKeys.Distinct(StringComparer.Ordinal).Count());
     }

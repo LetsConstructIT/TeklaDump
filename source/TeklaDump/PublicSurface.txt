@@ -1,0 +1,78 @@
+TeklaDump.ComponentAttributeMode (enum) : int
+TeklaDump.ComponentAttributeMode.Discovered = 1
+TeklaDump.ComponentAttributeMode.Explicit = 2
+TeklaDump.ComponentAttributeMode.None = 0
+TeklaDump.DumpOptions (sealed class)
+TeklaDump.DumpOptions..ctor()
+TeklaDump.DumpOptions.Cancellation { get; set; } : System.Threading.CancellationToken
+TeklaDump.DumpOptions.ComponentAttributeNames { get; set; } : System.Collections.Generic.IReadOnlyList<string>
+TeklaDump.DumpOptions.ComponentAttributes { get; set; } : TeklaDump.ComponentAttributeMode
+TeklaDump.DumpOptions.Default { get; } : TeklaDump.DumpOptions [static]
+TeklaDump.DumpOptions.Geometry { get; set; } : TeklaDump.GeometryDetail
+TeklaDump.DumpOptions.IncludeDerived { get; set; } : bool
+TeklaDump.DumpOptions.IncludeSessionDetails { get; set; } : bool
+TeklaDump.DumpOptions.MaxDepth { get; set; } : int
+TeklaDump.DumpOptions.MaxItems { get; set; } : int
+TeklaDump.DumpOptions.MaxTemplateAttributes { get; set; } : int
+TeklaDump.DumpOptions.Progress { get; set; } : System.IProgress<TeklaDump.DumpProgress>
+TeklaDump.DumpOptions.ReportJoinThreshold { get; set; } : int
+TeklaDump.DumpOptions.TemplateAttributeNames { get; set; } : System.Collections.Generic.IReadOnlyList<string>
+TeklaDump.DumpOptions.TemplateAttributes { get; set; } : TeklaDump.TemplateAttributeScope
+TeklaDump.DumpOptions.Units { get; set; } : TeklaDump.UnitPolicy
+TeklaDump.DumpOptions.UserProperties { get; set; } : TeklaDump.UserPropertyMode
+TeklaDump.DumpProgress (sealed class)
+TeklaDump.DumpProgress..ctor(int, int, string)
+TeklaDump.DumpProgress.ObjectsSkipped { get; } : int
+TeklaDump.DumpProgress.ObjectsWritten { get; } : int
+TeklaDump.DumpProgress.Phase { get; } : string
+TeklaDump.DumpResult (sealed class)
+TeklaDump.DumpResult.AttributeTier { get; } : string
+TeklaDump.DumpResult.Elapsed { get; } : System.TimeSpan
+TeklaDump.DumpResult.ObjectsSkipped { get; } : int
+TeklaDump.DumpResult.ObjectsWritten { get; } : int
+TeklaDump.DumpResult.Warnings { get; } : System.Collections.Generic.IReadOnlyList<TeklaDump.DumpWarning>
+TeklaDump.DumpWarning (sealed class)
+TeklaDump.DumpWarning..ctor(string, string, string = default, string = default)
+TeklaDump.DumpWarning.Code { get; } : string
+TeklaDump.DumpWarning.Guid { get; } : string
+TeklaDump.DumpWarning.Message { get; } : string
+TeklaDump.DumpWarning.ObjectType { get; } : string
+TeklaDump.DumpWarning.ToString() : string [virtual]
+TeklaDump.DumpWriter (static class)
+TeklaDump.DumpWriter.Bulk(System.Collections.Generic.IEnumerable<Tekla.Structures.Model.ModelObject>, System.IO.Stream, TeklaDump.DumpOptions = default) : TeklaDump.DumpResult [static]
+TeklaDump.DumpWriter.Inspect(System.Collections.Generic.IEnumerable<Tekla.Structures.Model.ModelObject>, TeklaDump.DumpOptions = default) : TeklaDump.Json.JsonValue [static]
+TeklaDump.GeometryDetail (enum) : int
+TeklaDump.GeometryDetail.None = 0
+TeklaDump.GeometryDetail.Points = 1
+TeklaDump.GeometryDetail.Solids = 2
+TeklaDump.Json.JsonArray (sealed class) : TeklaDump.Json.JsonValue
+TeklaDump.Json.JsonArray..ctor()
+TeklaDump.Json.JsonArray.Add(TeklaDump.Json.JsonValue) : void
+TeklaDump.Json.JsonArray.Count { get; } : int
+TeklaDump.Json.JsonObject (sealed class) : TeklaDump.Json.JsonValue
+TeklaDump.Json.JsonObject..ctor()
+TeklaDump.Json.JsonObject.Add(string, TeklaDump.Json.JsonValue) : void
+TeklaDump.Json.JsonObject.AddIfPresent(string, TeklaDump.Json.JsonValue) : void
+TeklaDump.Json.JsonObject.Count { get; } : int
+TeklaDump.Json.JsonValue (abstract class)
+TeklaDump.Json.JsonValue..ctor()
+TeklaDump.Json.JsonValue.Bool(bool) : TeklaDump.Json.JsonValue [static]
+TeklaDump.Json.JsonValue.Null { get; } : TeklaDump.Json.JsonValue [static]
+TeklaDump.Json.JsonValue.Number(double) : TeklaDump.Json.JsonValue [static]
+TeklaDump.Json.JsonValue.Number(long) : TeklaDump.Json.JsonValue [static]
+TeklaDump.Json.JsonValue.String(string) : TeklaDump.Json.JsonValue [static]
+TeklaDump.Json.JsonValue.ToCompactString() : string
+TeklaDump.Json.JsonValue.ToIndentedString() : string
+TeklaDump.SchemaVersion (static class)
+TeklaDump.SchemaVersion.Current : string [const]
+TeklaDump.SchemaVersion.ModelDomain : string [const]
+TeklaDump.TemplateAttributeScope (enum) : int
+TeklaDump.TemplateAttributeScope.Associated = 1
+TeklaDump.TemplateAttributeScope.Full = 2
+TeklaDump.TemplateAttributeScope.None = 0
+TeklaDump.UnitPolicy (enum) : int
+TeklaDump.UnitPolicy.Native = 1
+TeklaDump.UnitPolicy.Normalized = 0
+TeklaDump.UserPropertyMode (enum) : int
+TeklaDump.UserPropertyMode.All = 1
+TeklaDump.UserPropertyMode.None = 0

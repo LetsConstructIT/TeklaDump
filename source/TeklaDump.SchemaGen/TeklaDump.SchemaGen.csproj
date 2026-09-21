@@ -29,4 +29,13 @@
         <ProjectReference Include="..\TeklaDump\TeklaDump.csproj" />
     </ItemGroup>
 
+    <!-- BuildInspectSchema / BuildBulkSchema take IObjectExtractor, which is internal to
+         TeklaDump: the extractor contract is not public API. SchemaTests drives the generator
+         directly so the committed schema and the test suite agree on one code path. -->
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>TeklaDump.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
 </Project>

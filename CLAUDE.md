@@ -7,9 +7,11 @@ assigns only assignable properties. Read [README.md](README.md) for the product 
 
 ## Layout
 
-- [source/TeklaDump/](source/TeklaDump/) — the library (net48, AnyCPU, NuGet package). Public
-  surface is only `DumpWriter.Inspect` / `DumpWriter.Bulk`, `DumpOptions`, `DumpResult`,
-  `JsonValue`. Everything else is `internal` (`InternalsVisibleTo` tests + SchemaGen + `tekla-dump`).
+- [source/TeklaDump/](source/TeklaDump/) — the library (net48, AnyCPU, NuGet package). The public
+  surface is fourteen types, pinned in [PublicSurface.txt](source/TeklaDump/PublicSurface.txt):
+  `DumpWriter`, `DumpOptions` + its five option enums, `DumpResult`/`DumpWarning`/`DumpProgress`,
+  `JsonValue`/`JsonObject`/`JsonArray`, `SchemaVersion`. Everything else is `internal`
+  (`InternalsVisibleTo` tests + SchemaGen + `tekla-dump`).
 - [source/TeklaDump.Cli/](source/TeklaDump.Cli/) — `tekla-dump.exe` (x64), the only place that
   connects to a session, selects and filters.
 - [source/TeklaDump.Macro/](source/TeklaDump.Macro/) — `DumpSelection.cs` macro bundle.
@@ -38,6 +40,12 @@ not here. CI compiles against every supported Tekla (2021→2026) plus the two g
   in [ExtractorContractTests.cs](source/TeklaDump.Tests/ExtractorContractTests.cs). Adding a field
   means declaring it in the extractor's `CreateKeys`/`DerivedKeys` and regenerating the schema.
 - **The committed schema must match the generator's output** (`Generate-Schema.ps1 -Check`).
+- **The public API surface is frozen** against
+  [PublicSurface.txt](source/TeklaDump/PublicSurface.txt), asserted in
+  [PublicSurfaceTests.cs](source/TeklaDump.Tests/PublicSurfaceTests.cs). A type that drifts to
+  `public` fails the build. Widening it is a deliberate act: regenerate with
+  `TEKLADUMP_APPROVE_PUBLIC_SURFACE=1`, commit, and record it in the CHANGELOG. Default to
+  `internal` — opening a type later is non-breaking, closing one is not.
 - **One binary for Tekla 2021–2026.** Release compiles against the 2021 floor; anything added in a
   later version is invoked by reflection via
   [OptionalTeklaApi](source/TeklaDump/Interop/OptionalTeklaApi.cs) and marked `Since` on the

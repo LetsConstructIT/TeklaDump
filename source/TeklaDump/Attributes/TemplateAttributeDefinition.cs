@@ -5,40 +5,11 @@ namespace TeklaDump.Attributes;
 /// column of <c>contentattributes*.lst</c>; it decides which <c>ArrayList</c> the name goes into
 /// when batching the read.
 /// </summary>
-public enum TemplateValueType
+internal enum TemplateValueType
 {
     Character,
     Float,
     Integer,
-}
-
-/// <summary>
-/// How much of the environment's template (report) attribute list to read for one object.
-/// </summary>
-/// <remarks>
-/// The tiers exist because cost is wildly uneven. A group that names another full model object
-/// (<c>MAIN_PART</c>, <c>CAST_UNIT</c>, <c>ASSEMBLY</c>) re-exposes that object's entire attribute
-/// set — hundreds of names, each needing Tekla to resolve and evaluate a different object. A group
-/// that names a constituent (<c>NUT</c>, <c>WASHER</c>, <c>PROFILE</c>) contributes a couple of
-/// dozen. Reading the second kind costs about what reading the object itself costs; reading the
-/// first is what turns a dump into a hang.
-/// </remarks>
-public enum TemplateAttributeScope
-{
-    /// <summary>Read none. The default for a dump — attributes are opt-in.</summary>
-    None,
-
-    /// <summary>
-    /// The object's own attributes plus its constituent groups — a bolt's nut, washer and hole; a
-    /// part's profile and material.
-    /// </summary>
-    Associated,
-
-    /// <summary>
-    /// Everything, including groups that traverse to other model objects. Complete, and slow
-    /// enough to be an explicit choice — see <see cref="DumpOptions.MaxTemplateAttributes"/>.
-    /// </summary>
-    Full,
 }
 
 /// <summary>
@@ -52,7 +23,7 @@ public enum TemplateAttributeScope
 /// expresses related objects: on a bolt, <c>NUT.WEIGHT</c> and <c>WASHER.MATERIAL</c> reach the nut
 /// and washer without the caller having to resolve them.
 /// </remarks>
-public sealed class TemplateAttributeDefinition
+internal sealed class TemplateAttributeDefinition
 {
     public TemplateAttributeDefinition(
         string name,

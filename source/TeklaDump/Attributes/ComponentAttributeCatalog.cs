@@ -7,7 +7,7 @@ using Tekla.Structures;
 namespace TeklaDump.Attributes;
 
 /// <summary>The type an attribute value should be read back as, guessed from the saved literal.</summary>
-public enum ComponentValueType
+internal enum ComponentValueType
 {
     Integer,
     Double,
@@ -15,7 +15,7 @@ public enum ComponentValueType
 }
 
 /// <summary>One discovered component attribute name plus the overload to try first.</summary>
-public sealed class ComponentAttributeName
+internal sealed class ComponentAttributeName
 {
     public ComponentAttributeName(string name, ComponentValueType valueType)
     {

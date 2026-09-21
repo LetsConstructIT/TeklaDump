@@ -10,18 +10,20 @@ namespace TeklaDump.Tests;
 /// </summary>
 public class UnitsTests
 {
+    // UnitKind is internal — it is not part of the published surface — so the expectation travels
+    // as nameof(). That still fails to compile if a member is renamed, which is the point of it.
     [Theory]
-    [InlineData("WEIGHT", UnitKind.Mass)]
-    [InlineData("ASSEMBLY.WEIGHT", UnitKind.Mass)]      // the kind comes from the LAST segment
-    [InlineData("WEIGHT_NET", UnitKind.Mass)]
-    [InlineData("AREA", UnitKind.Area)]
-    [InlineData("PAINTING_AREA", UnitKind.Area)]
-    [InlineData("VOLUME", UnitKind.Volume)]
-    [InlineData("LENGTH", UnitKind.Length)]
-    [InlineData("DENSITY", UnitKind.Other)]
-    public void Classifies_known_attribute_names(string name, UnitKind expected)
+    [InlineData("WEIGHT", nameof(UnitKind.Mass))]
+    [InlineData("ASSEMBLY.WEIGHT", nameof(UnitKind.Mass))]      // the kind comes from the LAST segment
+    [InlineData("WEIGHT_NET", nameof(UnitKind.Mass))]
+    [InlineData("AREA", nameof(UnitKind.Area))]
+    [InlineData("PAINTING_AREA", nameof(UnitKind.Area))]
+    [InlineData("VOLUME", nameof(UnitKind.Volume))]
+    [InlineData("LENGTH", nameof(UnitKind.Length))]
+    [InlineData("DENSITY", nameof(UnitKind.Other))]
+    public void Classifies_known_attribute_names(string name, string expected)
     {
-        Assert.Equal(expected, Units.KindFor(name));
+        Assert.Equal(expected, Units.KindFor(name).ToString());
     }
 
     [Theory]

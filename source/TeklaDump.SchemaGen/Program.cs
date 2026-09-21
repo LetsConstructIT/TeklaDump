@@ -59,7 +59,7 @@ public static class SchemaGenerator
         File.WriteAllBytes(path, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false).GetBytes(text));
     }
 
-    public static JsonValue BuildInspectSchema(IReadOnlyList<IObjectExtractor> extractors)
+    internal static JsonValue BuildInspectSchema(IReadOnlyList<IObjectExtractor> extractors)
     {
         var root = new JsonObject();
         root.Add("$schema", JsonValue.String(SchemaDialect));
@@ -90,7 +90,7 @@ public static class SchemaGenerator
         return root;
     }
 
-    public static JsonValue BuildBulkSchema(IReadOnlyList<IObjectExtractor> extractors)
+    internal static JsonValue BuildBulkSchema(IReadOnlyList<IObjectExtractor> extractors)
     {
         var root = new JsonObject();
         root.Add("$schema", JsonValue.String(SchemaDialect));

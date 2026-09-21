@@ -7,7 +7,7 @@ using TeklaDump.Sinks;
 namespace TeklaDump.Extractors;
 
 /// <summary>The JSON shape of one declared key. Drives schema generation.</summary>
-public enum DumpKeyType
+internal enum DumpKeyType
 {
     String,
     Number,
@@ -34,7 +34,7 @@ public enum DumpKeyType
 }
 
 /// <summary>One key an extractor may emit, with the type annotation the schema generator needs.</summary>
-public sealed class DumpKey
+internal sealed class DumpKey
 {
     public DumpKey(string name, DumpKeyType type, string? description = null, string? since = null)
     {
@@ -62,7 +62,7 @@ public sealed class DumpKey
 /// Turns one kind of model object into records. The contract that makes the schema reviewable in
 /// a diff.
 /// </summary>
-public interface IObjectExtractor
+internal interface IObjectExtractor
 {
     /// <summary>The most-derived CLR type this extractor claims.</summary>
     Type ObjectType { get; }

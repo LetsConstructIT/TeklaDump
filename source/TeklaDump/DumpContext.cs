@@ -15,7 +15,7 @@ namespace TeklaDump;
 /// Per-run state: the options, the session, the caches every extractor shares, and the warning
 /// collector. One instance per <see cref="DumpWriter"/> call, never shared between runs.
 /// </summary>
-public sealed class DumpContext
+internal sealed class DumpContext
 {
     private readonly List<DumpWarning> _warnings = new List<DumpWarning>();
     private readonly TemplateAttributeReader _templateReader = new TemplateAttributeReader();

@@ -14,7 +14,7 @@ namespace TeklaDump.Sinks;
 /// requirement rather than a nicety, because <see cref="NdjsonSink"/> cannot un-write a key it has
 /// already pushed to the stream.
 /// </remarks>
-public interface IDumpSink
+internal interface IDumpSink
 {
     /// <summary>Starts one record.</summary>
     void BeginRecord();

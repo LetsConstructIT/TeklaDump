@@ -43,6 +43,7 @@ schema movement gets its own `### Schema` subsection.
   step something a script can do — previously impossible, because every outcome was a `MessageBox`
   and the first modal box blocks whatever is driving it. Verified unattended on Tekla 2025:
   3 selected beams, 4.6 KB of JSON, 1.26 s.
+
 - `tekla-dump.exe` could not connect at all on a machine where the Open API was not in the GAC.
   `TeklaAssemblyResolver` only resolved names starting with `Tekla.`, but the remoting stack also
   needs BCL-shaped assemblies at the versions Tekla ships and redirects to in its own config
@@ -53,6 +54,10 @@ schema movement gets its own `### Schema` subsection.
   the process `ApplicationBase` is Tekla's `bin`. Verified against a live 2025 session —
   `doctor` reports `connected: True`, and `inspect` dumps 6235 beams.
 - Generated JSON Schema in `schema/v1/`, with a staleness check in the test suite and in CI.
+- The published API surface is pinned in `source/TeklaDump/PublicSurface.txt` and asserted by
+  `PublicSurfaceTests`, so a type cannot drift to `public` unnoticed. Fourteen types: `DumpWriter`,
+  `DumpOptions` and its five option enums, `DumpResult` / `DumpWarning` / `DumpProgress`,
+  `JsonValue` / `JsonObject` / `JsonArray`, and `SchemaVersion`.
 
 ### Schema
 
@@ -70,6 +75,14 @@ schema movement gets its own `### Schema` subsection.
   `contentattributes*.lst` declares a datatype and no unit, so there is nothing to read. An
   unrecognised name is left untouched rather than converted on a guess; `--units native` switches
   the mechanism off entirely. See `schema/v1/README.md` §5.
+- **The extractor contract, the sinks, `DumpContext`, `SessionInfo` and the attribute catalogs are
+  `internal`.** They were public before the surface was pinned, which would have frozen them as
+  compatibility promises at 1.0 without anyone deciding to. Opening a type later is a non-breaking
+  change and closing one is not, so the default is `internal` until a caller needs otherwise.
+- **`TemplateAttributeScope` moved from `TeklaDump.Attributes` to `TeklaDump`**, where the other
+  four `DumpOptions` enums already live. It is reachable from `DumpOptions.TemplateAttributes`, so
+  it was the one public type in that namespace and would have cost every consumer a second `using`
+  forever. Done before 1.0 because a namespace move afterwards is breaking.
 - **Component attribute files are `<owner>_attributes.<NAME> <value>`**, whitespace separated —
   not `name=value` as earlier notes assumed. Checked against a Tekla 2026.0 installation; the two
   fixture files in `fixtures/component-attrs/` are real ones.

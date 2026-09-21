@@ -8,7 +8,7 @@ namespace TeklaDump;
 /// unitless (class, counts, enum ordinals) or carries a unit we cannot convert, and is handled
 /// accordingly by <see cref="Units"/>.
 /// </summary>
-public enum UnitKind
+internal enum UnitKind
 {
     /// <summary>Unitless, or unknown — emitted as a bare number, untouched.</summary>
     None,

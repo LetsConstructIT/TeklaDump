@@ -19,7 +19,7 @@ namespace TeklaDump.Session;
 /// read, and every one of them is wrapped: a header field that cannot be read is omitted, never
 /// fatal, because a dump is still useful without a build number.
 /// </remarks>
-public sealed class SessionInfo
+internal sealed class SessionInfo
 {
     private readonly Model _model;
 
@@ -207,7 +207,7 @@ public sealed class SessionInfo
 }
 
 /// <summary>The work plane as the header reports it.</summary>
-public sealed class WorkPlaneState
+internal sealed class WorkPlaneState
 {
     private WorkPlaneState(string name, Point? origin, IReadOnlyList<Vector>? axes)
     {
