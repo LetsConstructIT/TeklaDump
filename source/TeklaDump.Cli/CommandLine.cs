@@ -249,7 +249,7 @@ EXIT CODES
   1  unexpected error
   2  no running Tekla Structures session
   3  bad arguments
-  4  completed, but some objects were skipped (see the warnings)
+  4  completed, but some objects were skipped — or cancelled with Ctrl+C
 
 The JSON is NOT a round-trip format. It does not recreate a model: components generate their own
 output, many properties are derived, and welds and rebar bind to their parents by identifier. The

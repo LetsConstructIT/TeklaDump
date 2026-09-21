@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace TeklaDump.Cli;
 
@@ -13,6 +14,12 @@ internal static class Program
     public const int NoSession = 2;
     public const int BadArguments = 3;
     public const int CompletedWithWarnings = 4;
+
+    /// <summary>
+    /// Signalled by Ctrl+C and by nothing else. The library polls it between records; see
+    /// <see cref="RequestCancellation"/> for why the keypress is handled rather than fatal.
+    /// </summary>
+    private static readonly CancellationTokenSource Cancellation = new CancellationTokenSource();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static int Main(string[] args)
@@ -37,6 +44,10 @@ internal static class Program
             return command.Help ? Ok : BadArguments;
         }
 
+        // Ctrl+C has to be handled, not fatal — see RequestCancellation. Installed before the
+        // first Tekla call, because that call is one of the ones worth interrupting.
+        Console.CancelKeyPress += OnCancelKeyPress;
+
         // The resolver must be installed before the first Tekla type is TOUCHED, and the JIT
         // resolves the types a method mentions when it compiles that method — so the real work
         // lives in a separate, non-inlined method that this one calls only after Install.
@@ -44,13 +55,17 @@ internal static class Program
 
         try
         {
-            return Commands.Run(command);
+            return Commands.Run(command, Cancellation.Token);
         }
         catch (OperationCanceledException)
         {
-            // Ctrl+C during a bulk run: the file on disk is a valid truncated NDJSON, because every
-            // completed line is independently parseable.
-            Console.Error.WriteLine("Cancelled. The output written so far is valid NDJSON.");
+            // Bulk only: the cancellation check sits between records and the sink closes on a
+            // complete line, so the file on disk is a valid truncated NDJSON. Inspect builds its
+            // document before it writes anything, so there is nothing on disk to describe.
+            Console.Error.WriteLine(
+                string.Equals(command.Command, "bulk", StringComparison.OrdinalIgnoreCase)
+                    ? "Cancelled. The output written so far is valid NDJSON."
+                    : "Cancelled.");
             return CompletedWithWarnings;
         }
         catch (Exception ex) when (IsOpenApiBindingFailure(ex))
@@ -71,7 +86,34 @@ internal static class Program
         }
     }
 
+    private static void OnCancelKeyPress(object? sender, ConsoleCancelEventArgs e) =>
+        e.Cancel = RequestCancellation(Cancellation);
+
     /// <summary>
+    /// What a Ctrl+C does. Returns whether the keypress was handled — false lets the runtime kill
+    /// the process, which is the default behaviour and what the second press restores.
+    /// </summary>
+    /// <remarks>
+    /// The first press has to be handled rather than fatal, because the CLI leaves two things
+    /// behind when it is killed outright: the user's work plane, which it normalized to global and
+    /// restores in a finally, and up to 64 KB of buffered NDJSON, which is lost mid-line and takes
+    /// the "every completed line is parseable" promise with it. Cancelling unwinds both.
+    ///
+    /// The second press has to kill, because cancellation is polled between records and a long
+    /// Tekla call — a report join, a 200k-object enumeration — reaches no check point for minutes.
+    /// Swallowing every Ctrl+C would take the user's last way out of a run that looks hung.
+    ///
+    /// The message is the answer to a keypress rather than a notice about the run, so it ignores
+    /// --quiet: someone who just pressed Ctrl+C is owed a reply.
+    /// </remarks>
+    internal static bool RequestCancellation(CancellationTokenSource source)
+    {
+        if (source.IsCancellationRequested) return false;
+
+        source.Cancel();
+        Console.Error.WriteLine("Cancelling. Press Ctrl+C again to stop immediately.");
+        return true;
+    }    /// <summary>
     /// What a bug report should open with: which exe, which <c>TeklaDump.dll</c> it actually
     /// loaded, and which schema that DLL writes.
     /// </summary>

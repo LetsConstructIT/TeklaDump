@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using Tekla.Structures.Model;
 using TeklaDump.Attributes;
 using TeklaDump.Session;
@@ -13,12 +14,12 @@ namespace TeklaDump.Cli;
 /// <summary>The four commands. Everything Tekla-touching is here, behind the assembly resolver.</summary>
 internal static class Commands
 {
-    public static int Run(CommandLine command)
+    public static int Run(CommandLine command, CancellationToken cancellation)
     {
         switch (command.Command.ToLowerInvariant())
         {
-            case "inspect": return Inspect(command);
-            case "bulk": return Bulk(command);
+            case "inspect": return Inspect(command, cancellation);
+            case "bulk": return Bulk(command, cancellation);
             case "attrs": return Attrs(command);
             case "doctor": return Doctor(command);
             default:
@@ -27,7 +28,7 @@ internal static class Commands
         }
     }
 
-    private static int Inspect(CommandLine command)
+    private static int Inspect(CommandLine command, CancellationToken cancellation)
     {
         var collector = new TeklaObjectsCollector();
         if (!RequireSession(collector)) return Program.NoSession;
@@ -39,7 +40,7 @@ internal static class Commands
             return Program.BadArguments;
         }
 
-        var options = BuildOptions(command, sessionDetailsDefault: false);
+        var options = BuildOptions(command, sessionDetailsDefault: false, cancellation);
 
         string text;
         using (GlobalWorkPlane.Enter(collector.Model, out var notice))
@@ -63,7 +64,7 @@ internal static class Commands
         return Program.Ok;
     }
 
-    private static int Bulk(CommandLine command)
+    private static int Bulk(CommandLine command, CancellationToken cancellation)
     {
         var collector = new TeklaObjectsCollector();
         if (!RequireSession(collector)) return Program.NoSession;
@@ -75,7 +76,7 @@ internal static class Commands
             return Program.BadArguments;
         }
 
-        var options = BuildOptions(command, sessionDetailsDefault: true);
+        var options = BuildOptions(command, sessionDetailsDefault: true, cancellation);
         if (command.Progress && !command.Quiet)
         {
             options.Progress = new Progress<DumpProgress>(progress =>
@@ -314,9 +315,16 @@ internal static class Commands
         catch (Exception) { return string.Empty; }
     }
 
-    private static DumpOptions BuildOptions(CommandLine command, bool sessionDetailsDefault)
+    /// <remarks>
+    /// The cancellation token is the only option here that does not come from a flag: it is
+    /// Ctrl+C, and it is the reason a cancelled bulk run leaves a parseable file behind rather
+    /// than whatever was in the buffer. See Program.RequestCancellation.
+    /// </remarks>
+    internal static DumpOptions BuildOptions(
+        CommandLine command, bool sessionDetailsDefault, CancellationToken cancellation)
     {
         var options = DumpOptions.Default;
+        options.Cancellation = cancellation;
 
         options.IncludeSessionDetails = command.SessionDetails ?? sessionDetailsDefault;
         options.IncludeDerived = !command.NoDerived;

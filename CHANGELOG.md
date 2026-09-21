@@ -31,6 +31,16 @@ schema movement gets its own `### Schema` subsection.
   loaded and where from, and the schema version read out of that DLL's own metadata. The exe and
   the DLL ship in two separate downloads (the CLI zip and the macro bundle), so a mismatched pair
   in one folder is a real failure mode, and it is the first thing an issue report rules out.
+
+  Ctrl+C is handled rather than fatal. The first press cancels the token the library already
+  polls between records, so the run unwinds: the NDJSON on disk ends on a complete line, and the
+  work plane the CLI normalized to global is put back. A second press kills the process, because
+  a long Tekla call — a report join, a whole-model enumeration — reaches no check point for
+  minutes, and swallowing every Ctrl+C would take away the only way out of a run that looks
+  hung. Before this the token was never signalled at all: the exe was killed outright, the last
+  buffered writes were lost mid-line, and a session that had been switched to the global plane
+  stayed there.
+
 - The macro bundle: `DumpSelection.cs` + `DumpSelection.png`, reflection-loading `TeklaDump.dll`,
   plus a `LangVersion 5` compile harness so CI catches what Tekla's macro compiler would fail on
   silently. The macro carries its own reference list via `#pragma reference` (`Akit5`,
