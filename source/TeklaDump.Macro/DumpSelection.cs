@@ -19,6 +19,23 @@
 //
 // WinForms MessageBox, not WPF: PresentationFramework is often missing from the macro compiler's
 // reference set, and a macro that will not compile is indistinguishable from one that did nothing.
+//
+// WHY THE PRAGMAS. The "fixed reference set" above is fixed per VERSION AND ENVIRONMENT, not fixed
+// across them. Tekla 2026's host list no longer carries Tekla.Structures.dll, which 2024's does —
+// so TeklaStructuresSettings.GetAdvancedOption below stopped compiling on 2026 while every other
+// version stayed fine, and by the rule above that reaches the user as a macro that does nothing.
+// #pragma reference makes the file carry its own list instead of inheriting one: the macro
+// compiler starts from System + System.Core only, and each directive adds one assembly, by partial
+// name (resolved out of Tekla's bin) or by full display name (the BCL). With these four the macro
+// compiles with NO host list at all, on every supported version, so the host list can change again
+// without anyone noticing at the wrong moment.
+
+#pragma warning disable 1633
+#pragma reference "Akit5"
+#pragma reference "Tekla.Structures"
+#pragma reference "Tekla.Structures.Model"
+#pragma reference "System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+#pragma warning restore 1633
 
 using System;
 using System.Collections;
