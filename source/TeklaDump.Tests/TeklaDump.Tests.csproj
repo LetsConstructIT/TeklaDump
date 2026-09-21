@@ -42,6 +42,13 @@
     <ItemGroup>
         <ProjectReference Include="..\TeklaDump\TeklaDump.csproj" />
         <ProjectReference Include="..\TeklaDump.SchemaGen\TeklaDump.SchemaGen.csproj" />
+        <!--
+            The CLI is referenced as an assembly, not run as a tool: the suite covers argument
+            parsing and the version text in process. It is an exe, so its output lands beside the
+            test assembly, which is also what lets the one process-level test copy tekla-dump.exe
+            somewhere empty and check that it survives TeklaDump.dll not being there.
+        -->
+        <ProjectReference Include="..\TeklaDump.Cli\TeklaDump.Cli.csproj" />
     </ItemGroup>
 
 </Project>

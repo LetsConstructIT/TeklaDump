@@ -57,6 +57,18 @@
         <PackageReference Include="TSAppConfigPatcherTask" Version="*" />
     </ItemGroup>
 
+    <!--
+        CommandLine says parsing is kept separate from doing "so it can be tested" — this is what
+        makes that true. Program and CommandLine stay internal: the exe is not a library and its
+        types are not a surface anyone binds to, so the alternative would be widening them for the
+        sake of the suite. TeklaDump.dll grants the same to the same assembly.
+    -->
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>TeklaDump.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\TeklaDump\TeklaDump.csproj" />
     </ItemGroup>

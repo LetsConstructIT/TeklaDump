@@ -80,8 +80,11 @@ internal static class Program
     /// a mismatched pair sitting in one folder is a real failure mode, and these three lines are
     /// where it becomes visible. Printed before the assembly resolver is installed, because it has
     /// to work on a machine with no Tekla on it at all.
+    ///
+    /// Internal rather than private so the suite can assert the three lines directly; the
+    /// degraded path, where TeklaDump.dll is not there at all, is covered by running the exe.
     /// </remarks>
-    private static string VersionText()
+    internal static string VersionText()
     {
         var text = "tekla-dump  " + InformationalVersion(typeof(Program).Assembly) + "\n";
 
