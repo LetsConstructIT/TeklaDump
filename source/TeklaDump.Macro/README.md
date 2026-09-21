@@ -42,8 +42,32 @@ of the macro failing silently on a user's machine — it has already caught two 
 
 What it **cannot** tell you: whether Tekla's own macro compiler accepts the file. That compiler's
 language level is undocumented and differs by version, which is why the source is written in a
-deliberately old dialect and why the macro must be smoke-tested in a real Tekla before a release.
-`LangVersion 5` is this harness enforcing that dialect.
+deliberately old dialect. `LangVersion 5` is this harness enforcing that dialect.
+
+## Release checks
+
+Two things close that gap, and both should run before a release:
+
+```powershell
+# 1. Compile with Tekla's OWN macro compiler, per version, without starting Tekla.
+#    Run it STRICT (no -LikeTekla): the macro carries its own #pragma reference list, so it must
+#    compile against no host list at all. That is what keeps it working when a host list changes
+#    - as 2026's did, dropping Tekla.Structures.dll and with it TeklaStructuresSettings.
+pwsh <tekla-open-api-skill>/scripts/Test-TeklaMacro.ps1 -Macro ./DumpSelection.cs -TeklaVersion 2026.0
+
+# 2. Smoke-test it INSIDE a running Tekla, unattended.
+pwsh <tekla-open-api-skill>/scripts/Invoke-TeklaMacro.ps1 -Macro ./DumpSelection.cs `
+     -TeklaVersion 2025.0 -OutFile ./dump.json
+```
+
+The second is possible because of `TEKLA_MACRO_OUT` (see `Run`): when that variable is set the
+macro writes its JSON to that path instead of the Desktop and **opens no dialogs at all** —
+failures go into the file with an `ERROR: ` prefix. Without it a macro whose every outcome is a
+`MessageBox` cannot be driven by a script, because the first modal box blocks the caller and
+Tekla with it. That is what kept this a manual step.
+
+Verified on Tekla 2025 against the sample model: three selected beams in, 4.6 KB of JSON out,
+1.26 s, no interaction.
 
 ## The two alternatives, and why this one
 

@@ -30,7 +30,19 @@ schema movement gets its own `### Schema` subsection.
   `--tekla-bin`).
 - The macro bundle: `DumpSelection.cs` + `DumpSelection.png`, reflection-loading `TeklaDump.dll`,
   plus a `LangVersion 5` compile harness so CI catches what Tekla's macro compiler would fail on
-  silently.
+  silently. The macro carries its own reference list via `#pragma reference` (`Akit5`,
+  `Tekla.Structures`, `Tekla.Structures.Model`, `System.Windows.Forms`) instead of inheriting the
+  host's: **Tekla 2026's host list no longer includes `Tekla.Structures.dll`**, which 2024's does,
+  so `TeklaStructuresSettings.GetAdvancedOption` did not compile there — and a macro that does not
+  compile is indistinguishable from one that did nothing. With the directives it compiles against
+  no host list at all on 2024, 2025 and 2026.
+
+  The macro also honours **`TEKLA_MACRO_OUT`**: when that environment variable holds a path, it
+  writes its JSON there instead of the Desktop and opens **no dialogs**, reporting failures into
+  the same file with an `ERROR: ` prefix. That makes the "smoke-test it in a real Tekla" release
+  step something a script can do — previously impossible, because every outcome was a `MessageBox`
+  and the first modal box blocks whatever is driving it. Verified unattended on Tekla 2025:
+  3 selected beams, 4.6 KB of JSON, 1.26 s.
 - `tekla-dump.exe` could not connect at all on a machine where the Open API was not in the GAC.
   `TeklaAssemblyResolver` only resolved names starting with `Tekla.`, but the remoting stack also
   needs BCL-shaped assemblies at the versions Tekla ships and redirects to in its own config

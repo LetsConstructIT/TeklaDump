@@ -59,20 +59,50 @@ namespace Tekla.Technology.Akit.UserScript
 {
     public class Script
     {
+        /// <summary>
+        /// Where the answer goes when something is driving this macro instead of a person.
+        /// </summary>
+        /// <remarks>
+        /// A macro has no console, so an unattended caller hands it a file path in this variable
+        /// and reads the file afterwards. When it is set, nothing here opens a dialog: a modal
+        /// box with nobody to click it blocks the caller until its timeout, and blocks Tekla with
+        /// it. Failures go into the file instead, prefixed so the caller can tell them apart.
+        /// This is also what lets the macro be smoke-tested in a real Tekla by a script, which
+        /// is otherwise a manual step nobody remembers before a release.
+        /// </remarks>
+        private const string OutputVariable = "TEKLA_MACRO_OUT";
+
+        private static string _outputPath;
+        private static bool Unattended { get { return _outputPath != null; } }
+
         public static void Run(Tekla.Technology.Akit.IScript akit)
         {
+            _outputPath = Environment.GetEnvironmentVariable(OutputVariable);
+            if (_outputPath != null && _outputPath.Trim().Length == 0) _outputPath = null;
+
             try
             {
                 Dump();
             }
             catch (Exception exception)
             {
-                MessageBox.Show(
-                    "TeklaDump failed:" + Environment.NewLine + Environment.NewLine + exception.Message,
-                    "TeklaDump",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                Report("TeklaDump failed:" + Environment.NewLine + Environment.NewLine + exception,
+                       MessageBoxIcon.Error);
             }
+        }
+
+        /// <summary>Tells the user, or the caller - never both, and never a dialog when unattended.</summary>
+        private static void Report(string message, MessageBoxIcon icon)
+        {
+            if (Unattended)
+            {
+                var prefix = icon == MessageBoxIcon.Information ? "" : "ERROR: ";
+                try { File.WriteAllText(_outputPath, prefix + message); }
+                catch { /* nothing left to report it with */ }
+                return;
+            }
+
+            MessageBox.Show(message, "TeklaDump", MessageBoxButtons.OK, icon);
         }
 
         private static void Dump()
@@ -80,25 +110,25 @@ namespace Tekla.Technology.Akit.UserScript
             var model = new Model();
             if (!model.GetConnectionStatus())
             {
-                MessageBox.Show("No model is open.", "TeklaDump");
+                Report("No model is open.", MessageBoxIcon.Warning);
                 return;
             }
 
             var selected = GetSelectedObjects();
             if (selected.Count == 0)
             {
-                MessageBox.Show("Select some objects first, then run TeklaDump.", "TeklaDump");
+                Report("Select some objects first, then run TeklaDump.", MessageBoxIcon.Warning);
                 return;
             }
 
             var assembly = LoadTeklaDump();
             if (assembly == null)
             {
-                MessageBox.Show(
+                Report(
                     "TeklaDump.dll was not found." + Environment.NewLine + Environment.NewLine +
                     "It should sit in a TeklaDump\\ folder next to this macro. Searched:" +
                     Environment.NewLine + string.Join(Environment.NewLine, SearchedPaths().ToArray()),
-                    "TeklaDump");
+                    MessageBoxIcon.Warning);
                 return;
             }
 
@@ -117,6 +147,15 @@ namespace Tekla.Technology.Akit.UserScript
             finally
             {
                 workPlaneHandler.SetCurrentTransformationPlane(previousPlane);
+            }
+
+            // Unattended, the caller already chose the path and is waiting to read JSON from it:
+            // writing a timestamped file to somebody's Desktop instead would be both a surprise
+            // and useless to them.
+            if (Unattended)
+            {
+                File.WriteAllText(_outputPath, text);
+                return;
             }
 
             var path = Path.Combine(
