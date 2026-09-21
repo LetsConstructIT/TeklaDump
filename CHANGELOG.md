@@ -31,6 +31,15 @@ schema movement gets its own `### Schema` subsection.
 - The macro bundle: `DumpSelection.cs` + `DumpSelection.png`, reflection-loading `TeklaDump.dll`,
   plus a `LangVersion 5` compile harness so CI catches what Tekla's macro compiler would fail on
   silently.
+- `tekla-dump.exe` could not connect at all on a machine where the Open API was not in the GAC.
+  `TeklaAssemblyResolver` only resolved names starting with `Tekla.`, but the remoting stack also
+  needs BCL-shaped assemblies at the versions Tekla ships and redirects to in its own config
+  (`System.Runtime.CompilerServices.Unsafe`, `System.ValueTuple`, Grpc). It now matches on the
+  **simple name at any version** and probes Tekla's private paths (`ExternalDeps/Grpc`, `Teigha`,
+  `OpenCascade`) as well as `bin`, because the bin's copy is by definition the one the running
+  Tekla loaded. Copying Tekla's `.exe.config` instead does not work: its `codeBase` hrefs assume
+  the process `ApplicationBase` is Tekla's `bin`. Verified against a live 2025 session —
+  `doctor` reports `connected: True`, and `inspect` dumps 6235 beams.
 - Generated JSON Schema in `schema/v1/`, with a staleness check in the test suite and in CI.
 
 ### Schema
