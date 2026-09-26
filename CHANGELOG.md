@@ -10,6 +10,8 @@ schema movement gets its own `### Schema` subsection.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-26
+
 ### Added
 
 - The library: `DumpWriter.Inspect` (curated document) and `DumpWriter.Bulk` (streaming NDJSON),
@@ -100,7 +102,7 @@ schema movement gets its own `### Schema` subsection.
   not `name=value` as earlier notes assumed. Checked against a Tekla 2026.0 installation; the two
   fixture files in `fixtures/component-attrs/` are real ones.
 
-### Not done yet
+### Known limitations
 
 - **The plugin-host binding spike**, the last of the three. The CLI host and the macro host are
   both verified against a live Tekla 2025 session and recorded above; the plugin host — the
@@ -115,3 +117,6 @@ schema movement gets its own `### Schema` subsection.
   and the procedure; `fixtures/TeklaDumpFixture.zip` is not committed yet.
 - The performance budget (200k objects under 3 minutes) is a hypothesis until it is measured
   against a real model. `fixtures/golden/README.md` records the full budget table.
+
+[Unreleased]: https://github.com/LetsConstructIT/TeklaDump/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/LetsConstructIT/TeklaDump/releases/tag/v1.0.0
