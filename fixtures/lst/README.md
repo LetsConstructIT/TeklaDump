@@ -20,3 +20,7 @@ Tests that need a shape these files do not contain (a circular `[INCLUDE]`, an A
 binding with no datatype anywhere) build it in a temp folder instead: those shapes are a few lines
 each, and a suite that only passes on a machine with the right environment installed is not a suite
 anyone can rely on.
+
+The `.lst` files are © Trimble Inc. and/or its affiliates. They're here only as test input and
+aren't covered by this repository's MIT licence. Tekla Structures is a trademark of Trimble. This
+project isn't affiliated with or endorsed by Trimble.

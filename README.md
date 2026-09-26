@@ -186,5 +186,13 @@ everything that talks to the model database lives in the golden-file suite inste
 MIT. Free forever, no paid tier, no telemetry.
 
 If you write Tekla Open API code with an LLM, the
-[`tekla-open-api` skill](https://github.com/grzegorz-olszewski) is the other half of the loop: this
-gets real model data into the conversation, that gets correct code out of it.
+[`tekla-open-api` skill](https://constructivegreg.com/tekla-open-api-course/) is the other half of
+the loop: this gets real model data into the conversation, that gets correct code out of it.
+
+## Trademarks
+
+Tekla, Tekla Structures and Trimble are trademarks or registered trademarks of Trimble Inc. and/or
+its affiliates. TeklaDump is an independent project. It is not affiliated with, endorsed by, or
+supported by Trimble. "Tekla" in the name only describes what the tool works with. The Tekla Open API
+assemblies are not distributed with this project: you reference them from your own Tekla
+installation or from Trimble's NuGet packages, under Trimble's terms.

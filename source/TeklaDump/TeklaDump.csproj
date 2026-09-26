@@ -15,7 +15,7 @@
         <NoWarn>$(NoWarn);CS1591</NoWarn>
 
         <PackageId>TeklaDump</PackageId>
-        <Description>Serializes Tekla Structures model objects to a documented JSON / NDJSON schema with an explicit settable-vs-derived split, so an LLM can turn a real model back into Open API code. No model writes, no telemetry.</Description>
+        <Description>Serializes Tekla Structures model objects to a documented JSON / NDJSON schema with an explicit settable-vs-derived split, so an LLM can turn a real model back into Open API code. No model writes, no telemetry. Independent project, not affiliated with or endorsed by Trimble.</Description>
         <PackageTags>tekla;tekla-structures;open-api;json;ndjson;bim;llm</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <IncludeSymbols>true</IncludeSymbols>

@@ -82,3 +82,8 @@ Verified on Tekla 2025 against the sample model: three selected beams in, 4.6 KB
 `XS_MACRO_DIRECTORY` as the name of the advanced option that holds the macro folder. The macro
 treats it as a hint rather than a fact: it tries that option, then the compiled macro's own
 location, then the model folder, and the "not found" message lists every path it looked at.
+
+## Trademarks
+
+Tekla and Tekla Structures are trademarks of Trimble Inc. TeklaDump is an independent project. It
+isn't affiliated with or endorsed by Trimble.

@@ -14,3 +14,7 @@ Two things these fixtures pin down:
   The queryable name is the part after the dot.
 - `-2147483648` is Tekla's "not set" sentinel. The values in these files are worthless as data,
   which is why discovery uses them only to guess a type and `GetAttribute` decides what is set.
+
+The files are © Trimble Inc. and/or its affiliates. They're here only as test input and aren't
+covered by this repository's MIT licence. Tekla Structures is a trademark of Trimble. This project
+isn't affiliated with or endorsed by Trimble.
