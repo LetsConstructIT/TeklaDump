@@ -102,8 +102,15 @@ schema movement gets its own `### Schema` subsection.
 
 ### Not done yet
 
-- The three binding spikes (plugin host, CLI host, macro host) need a running Tekla and a clean
-  machine, and gate the release rather than the code.
+- **The plugin-host binding spike**, the last of the three. The CLI host and the macro host are
+  both verified against a live Tekla 2025 session and recorded above; the plugin host — the
+  package pulled in from NuGet by a plugin and loaded *inside* `TeklaStructures.exe` — is not.
+  It is the only host with no resolution story of its own: the CLI carries
+  `TeklaAssemblyResolver` and the macro reflection-loads the DLL from a known folder, while a
+  plugin gets whatever the GAC and Tekla's own binding configuration hand it. That is precisely
+  the mechanism the "one binary for 2021 through 2026" claim rests on, so it is the one spike
+  whose failure would invalidate a headline. Needs a running Tekla, plus a machine with no
+  developer tooling for the clean-machine case.
 - Golden files need a Tekla installation to generate. `fixtures/golden/README.md` has the harness
   and the procedure; `fixtures/TeklaDumpFixture.zip` is not committed yet.
 - The performance budget (200k objects under 3 minutes) is a hypothesis until it is measured
