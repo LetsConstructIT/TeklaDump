@@ -22,12 +22,12 @@ jobs:
         with:
           global-json-file: global.json
 
-      - uses: gittools/actions/gitversion/setup@v3.0.0
+      - uses: gittools/actions/gitversion/setup@v4.7.0
         with:
           versionSpec: '6.x'
 
       - id: version
-        uses: gittools/actions/gitversion/execute@v3.0.0
+        uses: gittools/actions/gitversion/execute@v4.7.0
 
       # Release compiles against the 2021 floor (Directory.Build.props), which is what makes one
       # binary work on Tekla 2021 through 2026.
@@ -89,7 +89,7 @@ jobs:
           --api-key ${{ steps.nuget.outputs.NUGET_API_KEY }} --skip-duplicate
 
       - name: GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             artifacts/tekla-dump-*.zip
