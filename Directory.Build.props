@@ -42,8 +42,8 @@
         <Product>TeklaDump</Product>
         <Copyright>Copyright (c) Grzegorz Olszewski</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/grzegorz-olszewski/TeklaDump</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/grzegorz-olszewski/TeklaDump</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/olszewski-grzegorz/TeklaDump</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/olszewski-grzegorz/TeklaDump</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 

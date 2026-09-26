@@ -24,7 +24,7 @@ namespace TeklaDump.SchemaGen;
 public static class SchemaGenerator
 {
     private const string SchemaDialect = "https://json-schema.org/draft/2020-12/schema";
-    private const string BaseId = "https://raw.githubusercontent.com/grzegorz-olszewski/TeklaDump/main/schema/v1/";
+    private const string BaseId = "https://raw.githubusercontent.com/olszewski-grzegorz/TeklaDump/main/schema/v1/";
 
     public static int Main(string[] args)
     {

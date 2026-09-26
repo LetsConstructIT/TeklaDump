@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/grzegorz-olszewski/TeklaDump/main/schema/v1/bulk.schema.json",
+  "$id": "https://raw.githubusercontent.com/olszewski-grzegorz/TeklaDump/main/schema/v1/bulk.schema.json",
   "title": "TeklaDump bulk NDJSON 1.0",
   "description": "NDJSON, not a JSON document: line 1 validates against $defs/header and every subsequent line against $defs/record. UTF-8 without BOM, \\n line endings. Generated from the extractors' declared keys; do not hand-edit.",
   "oneOf": [
