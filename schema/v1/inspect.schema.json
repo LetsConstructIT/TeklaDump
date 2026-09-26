@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/olszewski-grzegorz/TeklaDump/main/schema/v1/inspect.schema.json",
+  "$id": "https://raw.githubusercontent.com/LetsConstructIT/TeklaDump/main/schema/v1/inspect.schema.json",
   "title": "TeklaDump inspect document 1.0",
   "description": "A curated view of a handful of Tekla model objects. Generated from the extractors' declared keys; do not hand-edit.",
   "type": "object",
